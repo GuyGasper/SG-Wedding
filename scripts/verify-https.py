@@ -2,6 +2,7 @@
 """Verify a wedding load balancer using real-domain TLS before DNS cutover."""
 import argparse
 from concurrent.futures import ThreadPoolExecutor
+from contextlib import closing
 import gzip
 import http.client
 import ipaddress
@@ -44,7 +45,7 @@ def main():
         parser.error('Use 1–20 concurrent users and 1–300 seconds')
     result = {'address': str(args.address), 'tls_validation': True, 'domains': [], 'loads': []}
     for host in ['sg2027wedding.com', 'www.sg2027wedding.com']:
-        with Connection(host, str(args.address)) as connection:
+        with closing(Connection(host, str(args.address))) as connection:
             html, _, _, _ = fetch(connection, '/')
             assert b'Sarah Eisenman &amp; Guy Gasper' in html
             route, _, _, _ = fetch(connection, '/home')
@@ -67,7 +68,7 @@ def main():
         deadline = time.monotonic() + args.duration
         def visitor(_):
             pages, requests, sizes, errors = [], [], [], []
-            with Connection('sg2027wedding.com', str(args.address)) as connection:
+            with closing(Connection('sg2027wedding.com', str(args.address))) as connection:
                 while time.monotonic() < deadline:
                     start = time.monotonic()
                     try:
