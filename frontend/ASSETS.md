@@ -1,7 +1,5 @@
 # Homepage assets
 
-The alpine landscape is a temporary editorial image, not a photograph of Sarah and Guy.
-Source: https://unsplash.com/photos/f978cf4d019e (photo ID 1470770841072-f978cf4d019e).
-Delivered locally as an optimized WebP. Replace `public/images/landscape.webp` with the couple's photo when available; update its alt text in `src/main.tsx`.
+`public/images/sarah-and-guy.jpg` is the original photograph supplied by the user for this wedding homepage. It is displayed at its native 4:3 aspect ratio so both faces and the engagement ring remain visible on desktop and mobile.
 
 Bodoni Moda and Pinyon Script are self-hosted Google Fonts. Their SIL Open Font License files are included in `public/fonts/`. The floral ornament is original inline SVG.

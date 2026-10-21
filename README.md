@@ -1,6 +1,6 @@
 # Sarah & Guy — October 2, 2027
 
-Wedding homepage for Sarah Eisenman and Guy Gasper, with a small Java verification API. React uses a sage/ivory invitation design inspired by the supplied Minted reference. Navigation contains only Home. The landscape is temporary; see `frontend/ASSETS.md`.
+Wedding homepage for Sarah Eisenman and Guy Gasper, with a small Java verification API. React uses a sage/ivory invitation design inspired by the supplied Minted reference. Navigation contains only Home. The hero uses the supplied engagement photo; see `frontend/ASSETS.md`.
 
 ## Local development
 
