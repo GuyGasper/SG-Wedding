@@ -13,3 +13,4 @@ test-results/
 
 __pycache__/
 *.pyc
+*:Zone.Identifier
