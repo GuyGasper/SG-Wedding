@@ -1,0 +1,115 @@
+name: Build, verify, and publish ARM64 images
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+    inputs:
+      publish:
+        description: Publish tested images to OCIR (main only)
+        type: boolean
+        default: false
+permissions:
+  contents: read
+concurrency:
+  group: wedding-ci-${{ github.event_name }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
+jobs:
+  verify:
+    runs-on: ubuntu-24.04-arm
+    timeout-minutes: 35
+    env:
+      API_IMAGE: sg-wedding-api:ci-${{ github.sha }}
+      FRONTEND_IMAGE: sg-wedding-frontend:ci-${{ github.sha }}
+      COMPOSE_FILE: compose.yaml:compose.ci.yaml
+      COMPOSE_PROJECT_NAME: sg-wedding-ci
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: '21'
+          cache: maven
+          cache-dependency-path: backend/pom.xml
+      - run: mvn -B -ntp -f backend/pom.xml verify
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '24'
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - run: npm ci && npm run build
+        working-directory: frontend
+      - name: Verify release tooling
+        run: python3 -m unittest discover -s scripts/tests -v
+      - name: Build native ARM64 containers
+        run: docker compose build --pull
+      - name: Verify read-only containers, API proxy, and SPA routes
+        run: bash scripts/test-containers.sh
+      - run: npx playwright install --with-deps chromium
+        working-directory: frontend
+      - run: npm run test:e2e
+        working-directory: frontend
+        env:
+          PLAYWRIGHT_BASE_URL: http://127.0.0.1:8088
+      - name: Export the tested ARM64 images
+        if: github.ref == 'refs/heads/main' && (github.event_name == 'push' || inputs.publish)
+        run: python3 scripts/image-bundle.py export --source-sha "$SOURCE_SHA" --api-image "$API_IMAGE" --frontend-image "$FRONTEND_IMAGE" --bundle-dir artifacts/tested-images
+        env:
+          SOURCE_SHA: ${{ github.sha }}
+      - uses: actions/upload-artifact@v7
+        if: github.ref == 'refs/heads/main' && (github.event_name == 'push' || inputs.publish)
+        with:
+          name: tested-images-${{ github.sha }}
+          path: artifacts/tested-images/
+          compression-level: 0
+          retention-days: 2
+      - name: Stop test containers
+        if: always()
+        run: docker compose down --volumes --remove-orphans
+  publish:
+    needs: verify
+    if: github.ref == 'refs/heads/main' && (github.event_name == 'push' || inputs.publish)
+    runs-on: ubuntu-24.04-arm
+    timeout-minutes: 15
+    environment: production
+    concurrency:
+      group: sg-wedding-ocir
+      cancel-in-progress: false
+    env:
+      REGISTRY: ${{ vars.OCIR_REGISTRY }}
+      OCIR_NAMESPACE: ${{ vars.OCIR_NAMESPACE }}
+      SOURCE_SHA: ${{ github.sha }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: actions/download-artifact@v8
+        with:
+          name: tested-images-${{ github.sha }}
+          path: artifacts/tested-images
+      - name: Log in to OCIR
+        env:
+          OCIR_USERNAME: ${{ secrets.OCIR_USERNAME }}
+          OCIR_AUTH_TOKEN: ${{ secrets.OCIR_AUTH_TOKEN }}
+        run: |
+          : "${REGISTRY:?Set production variable OCIR_REGISTRY}"
+          : "${OCIR_NAMESPACE:?Set production variable OCIR_NAMESPACE}"
+          : "${OCIR_USERNAME:?Set production secret OCIR_USERNAME}"
+          : "${OCIR_AUTH_TOKEN:?Set production secret OCIR_AUTH_TOKEN}"
+          printf '%s' "$OCIR_AUTH_TOKEN" | docker login "$REGISTRY" --username "$OCIR_USERNAME" --password-stdin
+      - name: Publish the exact images that passed verification
+        run: python3 scripts/image-bundle.py publish --source-sha "$SOURCE_SHA" --bundle-dir artifacts/tested-images --registry "$REGISTRY" --namespace "$OCIR_NAMESPACE" --release-file .local/release.json
+      - uses: actions/upload-artifact@v7
+        with:
+          name: release-${{ github.sha }}
+          path: .local/release.json
+          include-hidden-files: true
+          if-no-files-found: error
+          retention-days: 30
+      - name: Record immutable deployment references
+        run: cat .local/release.json >> "$GITHUB_STEP_SUMMARY"
+      - name: Log out
+        if: always()
+        run: if [[ -n "$REGISTRY" ]]; then docker logout "$REGISTRY"; fi
