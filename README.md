@@ -4,10 +4,15 @@ Wedding homepage for Sarah Eisenman and Guy Gasper, with a small Java verificati
 
 ## Local development
 
-Requires Java 21, Maven 3.9+, and Node 24.
+Requires Java 21, Maven 3.9+, Node 24, and Docker. Java tests start disposable PostgreSQL 16 containers with Testcontainers; they need a working Docker daemon. Production credentials are never needed for tests.
 
 ```sh
 mvn -f backend/pom.xml verify
+docker compose up -d --wait database
+# These credentials are for the disposable local database only.
+export JDBC_URL='jdbc:postgresql://localhost:5433/sg_wedding'
+export DB_USERNAME=sg_wedding
+export DB_PASSWORD=local-wedding-only
 java -jar backend/target/app.jar
 # In another terminal:
 cd frontend
@@ -15,7 +20,7 @@ npm ci
 npm run dev -- --port 5174
 ```
 
-Vite forwards relative `/api` requests to the API on port 8080. The verification endpoint is `/api/status`. Internal probes are `/health/live` and `/health/ready`; readiness follows application availability. The homepage does not display technical API status.
+Vite forwards relative `/api` requests to the API on port 8080. The verification endpoint is `/api/status`. Internal probes are `/health/live` and `/health/ready`; readiness requires both application availability and a working database connection. Liveness remains independent of PostgreSQL. The homepage does not display technical API status.
 
 ## Containers and checks
 
@@ -27,7 +32,9 @@ npx playwright install --with-deps chromium
 PLAYWRIGHT_BASE_URL=http://127.0.0.1:8088 npm run test:e2e
 ```
 
-Both images target Linux ARM64. Java runs as 10001:10001 and Nginx as 101:101, with read-only filesystems and writable `/tmp`. Local frontend: http://localhost:8088. The API is internal except for a loopback-only port in `compose.ci.yaml`.
+Compose starts a local PostgreSQL database with a named volume and loopback-only port 5433. Its checked-in passwords are local fixtures, unrelated to production. `docker compose down` keeps local data; add `--volumes` only to reset that disposable database. The image build packages the API; `mvn verify` separately runs the database integration tests before CI builds either image.
+
+Both application images target Linux ARM64. Java runs as 10001:10001 and Nginx as 101:101, with read-only filesystems and writable `/tmp`. Local frontend: http://localhost:8088. The API is internal except for a loopback-only port in `compose.ci.yaml`.
 
 ## GitHub CI/CD
 
@@ -53,11 +60,26 @@ Destinations: `<registry>/<namespace>/sg-wedding/api` and `sg-wedding/frontend`.
 
 The deploy job follows the Personal OS pattern: check that the release is still the current main commit; configure short-lived local credential files on the runner; discover the API endpoint NSG from the selected cluster (or validate `OKE_ENDPOINT_NSG_ID`); allow only that runner's public IPv4 `/32` on TCP 6443; connect with an explicit kubeconfig/context; validate the release artifact and both Kubernetes image patches before changing anything; roll out the API before the frontend; then verify both HTTPS hostnames, the photo/fonts/build assets, SPA routing, and `/api/status`. CI uses a short smoke load; the full 10/20-user performance check remains available through `scripts/smoke-test.sh`.
 
-The deployment job reuses the existing load balancer, TLS secret, pull secret, resources, and namespace. It updates only the named API/frontend container images. It saves the previous images and HTTPS report as an artifact and restores the previous images when a rollout or HTTPS check fails, without overwriting external changes. It always attempts removal of its own temporary API rule and local credential files. Any abandoned narrow rules belonging to this repository are pruned on the next deployment after their one-hour lease expires. A failed cleanup step needs attention; runner crashes cannot guarantee immediate cleanup.
+The deployment job reuses the existing load balancer, TLS secret, pull secret, resources, and namespace. It updates the named API/frontend container images and wires the API to the required `database-credentials` Secret and its read-only CA mount. The frontend never receives database credentials. Before any update it validates the database Secret, including `sslmode=verify-full`, then server-side dry-runs both patches. It saves the previous images and HTTPS report as an artifact and restores the previous images when a rollout or HTTPS check fails, without overwriting external changes. Rollback restores images while retaining the database Secret reference and CA mount. Schema migrations are not reversed by an image rollback, so future migrations must remain compatible with the previous API version. It always attempts removal of its own temporary API rule and local credential files. Any abandoned narrow rules belonging to this repository are pruned on the next deployment after their one-hour lease expires. A failed cleanup step needs attention; runner crashes cannot guarantee immediate cleanup.
 
-The OCI identity needs cluster access, Kubernetes RBAC for the wedding deployments/service, and permissions to inspect/manage the selected API NSG's security rules. These are separate from OCIR publishing credentials. Deployment secrets are scoped to this repository's `production` environment. GitHub cannot copy another repository's encrypted secret values; configure the authorized identity from its original credential source.
+The OCI identity needs cluster access, Kubernetes RBAC for the wedding deployments/service and read access to the wedding `database-credentials` Secret, and permissions to inspect/manage the selected API NSG's security rules. These are separate from OCIR publishing credentials. Deployment secrets are scoped to this repository's `production` environment. GitHub cannot copy another repository's encrypted secret values; configure the authorized identity from its original credential source.
 
 Neither CI/CD nor publishing changes DNS or applies Terraform. The live apex and `www` records now point to `129.158.40.64`; the retained placeholder remains available for rollback.
+
+## PostgreSQL
+
+The API uses the private shared PostgreSQL VM's `sg_wedding` database as the ordinary `sg_wedding` login. Install `database-credentials` in the `sg-wedding` namespace using `OCI-Infrastructure/scripts/install-postgres-secrets.py` before deploying this version. Production database passwords must stay out of GitHub variables and this repository.
+
+| Secret key | Purpose |
+| --- | --- |
+| `JDBC_URL` | Private JDBC URL with `sslmode=verify-full&sslrootcert=/etc/database/root.crt` |
+| `DB_USERNAME` | `sg_wedding` |
+| `DB_PASSWORD` | Generated application-role password |
+| `DB_SSL_ROOT_CERT` | Trusted PostgreSQL CA, mounted as `/etc/database/root.crt` |
+
+At startup Flyway creates and migrates the application-owned `wedding` schema, then the API becomes ready. Missing credentials, failed TLS verification, or a failed migration prevent startup. Existing `public.infrastructure_restore_probe` is preserved; it belongs to infrastructure's backup checks. The first migration establishes the schema and migration history; guest/RSVP tables can be added with their corresponding features. Connections use `wedding` as their default schema and a pool capped at five connections per API replica.
+
+Add future migrations under `backend/src/main/resources/db/migration` as `V2__description.sql`, `V3__description.sql`, and so on. Never edit an applied migration or enable Flyway clean/baseline against production. Migrations run automatically during the normal API rollout. Database outages remove the API from readiness while leaving liveness healthy; readiness recovers when PostgreSQL returns. Backups and restores stay managed by shared infrastructure.
 
 ## Kubernetes deployment
 

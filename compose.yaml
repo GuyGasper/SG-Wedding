@@ -1,7 +1,29 @@
 services:
+  database:
+    image: postgres:16.15-bookworm
+    environment:
+      POSTGRES_DB: sg_wedding
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: local-admin-only
+    ports: ["127.0.0.1:5433:5432"]
+    volumes:
+      - wedding-postgres:/var/lib/postgresql/data
+      - ./backend/src/test/resources/database-test-init.sql:/docker-entrypoint-initdb.d/01-wedding.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d sg_wedding"]
+      interval: 2s
+      timeout: 3s
+      retries: 30
   api:
     image: ${API_IMAGE:-sg-wedding-api:local}
     build: ./backend
+    environment:
+      JDBC_URL: jdbc:postgresql://database:5432/sg_wedding
+      DB_USERNAME: sg_wedding
+      DB_PASSWORD: local-wedding-only
+    depends_on:
+      database:
+        condition: service_healthy
     platform: linux/arm64
     read_only: true
     user: "10001:10001"
@@ -22,3 +44,6 @@ services:
     tmpfs: ["/tmp:uid=101,gid=101,mode=1770"]
     ports: ["127.0.0.1:8088:8080"]
     depends_on: [api]
+
+volumes:
+  wedding-postgres:

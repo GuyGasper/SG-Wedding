@@ -1,3 +1,4 @@
+import base64
 import copy
 import importlib.util
 import json
@@ -32,6 +33,9 @@ class FakeDeployment:
 
     def get(self, name):
         return copy.deepcopy(self.deployments[name])
+
+    def validate_database(self):
+        pass
 
     def load_balancer_ip(self):
         return "129.153.0.152"
@@ -178,9 +182,65 @@ class DeployReleaseTest(unittest.TestCase):
             client.patch("sg-wedding-api", "api", "api:old", IMAGES["api"])
         payload = json.loads(kubectl.call_args.kwargs["input_text"])
         self.assertEqual(payload["metadata"], {"resourceVersion": "1"})
-        self.assertEqual(payload["spec"]["template"]["spec"]["containers"], [{"name": "api", "image": IMAGES["api"]}])
+        pod = payload["spec"]["template"]["spec"]
+        self.assertEqual(len(pod["containers"]), 1)
+        api = pod["containers"][0]
+        self.assertEqual((api["name"], api["image"]), ("api", IMAGES["api"]))
+        self.assertEqual(api["envFrom"], [{"secretRef": {"name": "database-credentials", "optional": False}}])
+        self.assertEqual(api["volumeMounts"], [{"name": "database-ca", "mountPath": "/etc/database", "readOnly": True}])
+        self.assertEqual(pod["volumes"][0]["secret"]["items"], [{"key": "DB_SSL_ROOT_CERT", "path": "root.crt"}])
         self.assertNotIn("replicas", payload["spec"])
 
+
+    def test_missing_database_secret_cannot_change_either_deployment(self):
+        self.client.validate_database = Mock(side_effect=ValueError("Missing database Secret"))
+        with self.assertRaisesRegex(ValueError, "Missing database"):
+            self.run_deploy()
+        self.assert_previous()
+        self.assertEqual(self.client.patches, [])
+
+    def test_database_configuration_preserves_other_environment_sources(self):
+        document = self.client.get("sg-wedding-api")
+        pod = document["spec"]["template"]["spec"]
+        pod["containers"][0]["envFrom"] = [
+            {"configMapRef": {"name": "application-settings"}},
+            {"secretRef": {"name": "database-credentials", "optional": True}}]
+        patch = {"name": "api"}
+        deploy.Deployment.database_patch(document, patch)
+        self.assertEqual(patch["envFrom"], [
+            {"configMapRef": {"name": "application-settings"}},
+            {"secretRef": {"name": "database-credentials", "optional": False}}])
+        pod["volumes"] = [{"name": "database-ca", "emptyDir": {}}]
+        with self.assertRaisesRegex(ValueError, "another source"):
+            deploy.Deployment.database_patch(document, {})
+
+    def test_frontend_patch_does_not_receive_database_credentials(self):
+        client = deploy.Deployment("selected-context")
+        document = self.client.get("sg-wedding-frontend")
+        with patch.object(client, "get", return_value=document), patch.object(client, "kubectl") as kubectl:
+            client.patch("sg-wedding-frontend", "frontend", "frontend:old", IMAGES["frontend"])
+        payload = json.loads(kubectl.call_args.kwargs["input_text"])
+        self.assertEqual(payload["spec"]["template"]["spec"], {
+            "containers": [{"name": "frontend", "image": IMAGES["frontend"]}]})
+
+    def test_secret_preflight_requires_verified_tls_and_all_keys_without_disclosing_values(self):
+        client = deploy.Deployment("selected-context")
+        values = {"JDBC_URL": "jdbc:postgresql://10.20.80.10:5432/sg_wedding?sslmode=verify-full&sslrootcert=/etc/database/root.crt",
+                  "DB_USERNAME": "sg_wedding", "DB_PASSWORD": "test-sensitive-value",
+                  "DB_SSL_ROOT_CERT": "-----BEGIN CERTIFICATE-----\nfixture\n-----END CERTIFICATE-----"}
+        def encoded():
+            return json.dumps({"data": {key: base64.b64encode(value.encode()).decode() for key, value in values.items()}})
+        with patch.object(client, "kubectl", return_value=encoded()) as kubectl:
+            client.validate_database()
+            kubectl.assert_called_once_with("get", "secret", "database-credentials", "-o", "json")
+        for bad in ("", values["JDBC_URL"].replace("verify-full", "require")):
+            values["JDBC_URL"] = bad
+            with patch.object(client, "kubectl", return_value=encoded()), self.assertRaises(ValueError) as error:
+                client.validate_database()
+            self.assertNotIn("test-sensitive-value", str(error.exception))
+        del values["DB_PASSWORD"]
+        with patch.object(client, "kubectl", return_value=encoded()), self.assertRaises(ValueError):
+            client.validate_database()
 
     def test_kubectl_targets_only_the_wedding_namespace(self):
         client = deploy.Deployment("shared-cluster-context")

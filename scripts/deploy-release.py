@@ -2,6 +2,8 @@
 """Promote tested image digests to existing OKE deployments; restore images on failure."""
 
 import argparse
+import base64
+import binascii
 import json
 import os
 from pathlib import Path
@@ -9,6 +11,7 @@ import re
 import subprocess
 import time
 import urllib.request
+import urllib.parse
 
 
 COMPONENTS = {"api": ("sg-wedding-api", "api"), "frontend": ("sg-wedding-frontend", "frontend")}
@@ -67,13 +70,57 @@ class Deployment:
         return next(item["image"] for item in deployment["spec"]["template"]["spec"]["containers"]
                     if item["name"] == container)
 
+    def validate_database(self):
+        # Never print Secret data or save it in release artifacts.
+        document = json.loads(self.kubectl("get", "secret", "database-credentials", "-o", "json"))
+        try:
+            values = {key: base64.b64decode(document["data"][key], validate=True).decode()
+                      for key in ("JDBC_URL", "DB_USERNAME", "DB_PASSWORD", "DB_SSL_ROOT_CERT")}
+            if not all(values.values()):
+                raise ValueError()
+            url = urllib.parse.urlparse(values["JDBC_URL"].removeprefix("jdbc:"))
+            query = urllib.parse.parse_qs(url.query)
+            if (not values["JDBC_URL"].startswith("jdbc:postgresql://")
+                    or url.path != "/sg_wedding" or not url.hostname
+                    or values["DB_USERNAME"] != "sg_wedding"
+                    or query.get("sslmode") != ["verify-full"]
+                    or query.get("sslrootcert") != ["/etc/database/root.crt"]
+                    or "-----BEGIN CERTIFICATE-----" not in values["DB_SSL_ROOT_CERT"]):
+                raise ValueError()
+        except (KeyError, ValueError, UnicodeError, binascii.Error):
+            raise ValueError("Invalid wedding database-credentials Secret; reinstall it with infrastructure's install-postgres-secrets.py") from None
+
+    @staticmethod
+    def database_patch(deployment, container_patch):
+        pod = deployment["spec"]["template"]["spec"]
+        current = next(item for item in pod["containers"] if item["name"] == "api")
+        if any(item["name"] in {"JDBC_URL", "DB_USERNAME", "DB_PASSWORD"} for item in current.get("env", [])):
+            raise ValueError("Remove direct database environment overrides before using database-credentials")
+        for mount in current.get("volumeMounts", []):
+            if mount["mountPath"] == "/etc/database" and mount["name"] != "database-ca":
+                raise ValueError("The /etc/database mount is already used by another volume")
+        for volume in pod.get("volumes", []):
+            if volume["name"] == "database-ca" and volume.get("secret", {}).get("secretName") != "database-credentials":
+                raise ValueError("The database-ca volume is already used by another source")
+        container_patch["envFrom"] = [item for item in current.get("envFrom", [])
+                                      if item.get("secretRef", {}).get("name") != "database-credentials"]
+        container_patch["envFrom"].append({"secretRef": {"name": "database-credentials", "optional": False}})
+        container_patch["volumeMounts"] = [{"name": "database-ca", "mountPath": "/etc/database", "readOnly": True}]
+        return [{"name": "database-ca", "secret": {
+            "secretName": "database-credentials", "optional": False,
+            "items": [{"key": "DB_SSL_ROOT_CERT", "path": "root.crt"}]}}]
+
     def patch(self, name, container, expected, desired, dry_run=False):
         deployment = self.get(name)
         if self.image(deployment, container) != expected:
             raise RuntimeError(f"{name} changed outside this deployment; refusing to overwrite it")
+        container_patch = {"name": container, "image": desired}
+        pod_patch = {"containers": [container_patch]}
+        if (name, container) == COMPONENTS["api"]:
+            pod_patch["volumes"] = self.database_patch(deployment, container_patch)
         patch = {
             "metadata": {"resourceVersion": deployment["metadata"]["resourceVersion"]},
-            "spec": {"template": {"spec": {"containers": [{"name": container, "image": desired}]}}},
+            "spec": {"template": {"spec": pod_patch}},
         }
         args = ["patch", "deployment", name, "--type=strategic", "--patch-file=/dev/stdin"]
         if dry_run:
@@ -98,6 +145,7 @@ def promote(client, images, smoke, snapshot, dry_run=False):
         if deployment["spec"].get("replicas", 1) < 1:
             raise ValueError(f"{name} is scaled down; refusing to start it implicitly")
         previous[component] = client.image(deployment, container)
+    client.validate_database()
     ip = client.load_balancer_ip()
     # Validate both patches server-side before changing either deployment.
     for component, (name, container) in COMPONENTS.items():
@@ -105,12 +153,12 @@ def promote(client, images, smoke, snapshot, dry_run=False):
     snapshot.parent.mkdir(parents=True, exist_ok=True)
     snapshot.write_text(json.dumps({"images": previous, "load_balancer_ip": ip}, indent=2) + "\n")
     if dry_run:
-        print("Both image updates passed server-side dry run; no resources changed.")
+        print("Database configuration and both image updates passed server-side dry run; no resources changed.")
         return
     changed = []
     try:
         for component, (name, container) in COMPONENTS.items():
-            if previous[component] != images[component]:
+            if component == "api" or previous[component] != images[component]:
                 # Record intent before patch: an API timeout may hide a successful mutation.
                 changed.append(component)
                 print(f"Updating {name}; waiting before starting the next component.", flush=True)
