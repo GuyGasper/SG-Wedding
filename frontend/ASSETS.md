@@ -4,4 +4,4 @@
 
 Bodoni Moda and Pinyon Script are self-hosted Google Fonts. Their SIL Open Font License files are included in `public/fonts/`. The floral ornament is original inline SVG.
 
-The footer credit uses the Minted wordmark from the [reference wedding site](https://demos.oursite.minted.com/MIN-QJ6-DWW/3812340/l1), stored locally as public/images/minted-wordmark.svg and linked to Minted.
+The footer credit uses the Minted wordmark from the [reference wedding site](https://demos.oursite.minted.com/MIN-QJ6-DWW/3812340/l1), stored locally as public/images/minted-wordmark-white.svg and linked to Minted.

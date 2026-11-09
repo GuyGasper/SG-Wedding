@@ -50,7 +50,7 @@ function App() {
         <p>
           Brought to you by Guy, with inspiration from{' '}
           <a href="https://www.minted.com/" className="footer-minted">
-            <img src="/images/minted-wordmark.svg" alt="minted." width="50" height="12" />
+            <img src="/images/minted-wordmark-white.svg" alt="minted." width="50" height="12" />
           </a>
         </p>
       </footer>

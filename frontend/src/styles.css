@@ -151,21 +151,24 @@ a{color:inherit}h1,p,figure{margin:0}.masthead{text-align:center;padding:65px 24
 }
 
 .site-footer {
-  padding: clamp(48px, 7vw, 96px) 20px 32px;
+  padding: clamp(56px, 8.5vw, 100px) 20px 30px;
   border-top: 4px solid #fff;
-  color: #263322;
+  color: #fff;
   text-align: center;
 }
 
 .site-footer p {
-  font: 0.875rem/1.8 Arial, sans-serif;
-  letter-spacing: 0.04em;
+  font: 0.75rem/1.75 Arial, sans-serif;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  text-wrap: balance;
 }
 
 .footer-minted {
   display: inline-block;
+  vertical-align: -0.12em;
 }
 
 .footer-minted img {
-  vertical-align: baseline;
+  display: block;
 }
