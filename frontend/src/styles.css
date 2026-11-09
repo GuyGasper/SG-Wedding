@@ -137,8 +137,13 @@ main {
   text-transform: uppercase;
 }
 
-.site-nav a[aria-current='page'],
-.site-nav a:hover {
+.site-nav a[aria-current='page'] {
+  text-decoration: underline var(--white) 2px;
+  text-underline-offset: 7px;
+  text-decoration-skip-ink: none;
+}
+
+.site-nav a:not([aria-current='page']):hover {
   color: var(--muted-white);
 }
 
@@ -222,8 +227,7 @@ main {
 
 .party-page {
   margin-top: 30px;
-  padding: 126px 12px 100px;
-  border-top: var(--divider);
+  padding: 130px 12px 100px;
 }
 
 .party-page h1,
