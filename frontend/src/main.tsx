@@ -1,10 +1,42 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useId, useRef, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import { WeddingParty } from './WeddingParty';
 import './styles.css';
+const pomponPetalRings = [
+  { count: 10, offset: 0, path: 'M0 -13C-8 -19 -11 -29 -6 -34C-3 -38 3 -38 6 -34C11 -29 8 -19 0 -13Z' },
+  { count: 8, offset: 0.5, path: 'M0 -6C-7 -10 -8 -19 -4 -23C-2 -26 2 -26 4 -23C8 -19 7 -10 0 -6Z' },
+  { count: 6, offset: 0, path: 'M0 -1C-4 -4 -4 -10 0 -12C4 -10 4 -4 0 -1Z' },
+];
+
 function Flower() {
-  return <svg className="flower" viewBox="0 0 120 130" fill="none" aria-hidden="true"><g stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"><path d="M95 117C68 98 66 68 48 39M94 116C75 105 48 110 24 99M94 116C88 93 87 58 77 25"/><path d="M66 92C43 95 34 78 22 79C33 98 49 103 69 98M83 79C91 62 99 60 105 48C89 50 80 64 83 79M52 51C33 54 21 40 23 33C21 29 27 24 31 27C28 17 35 14 40 23C39 11 48 10 51 23C59 17 66 22 59 32C71 37 65 47 52 51Z" fill="currentColor"/><path d="M77 49C68 38 66 23 71 13C83 23 86 36 82 51M46 108C30 116 18 113 10 109C21 103 34 102 46 108" fill="currentColor"/></g></svg>;
+  const id = useId();
+
+  return (
+    <svg className="flower" viewBox="0 0 120 130" fill="none" aria-hidden="true">
+      <g stroke="currentColor" strokeWidth="1.95" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M58 75C54 91 57 105 66 118" />
+        <path d="M57 96C45 85 36 85 25 85C34 98 47 102 57 101Z" />
+        <path d="M60 105C67 94 76 89 89 89C83 101 71 108 62 109Z" />
+        {pomponPetalRings.map(({ count, offset, path }) => {
+          const petalId = id + '-petal-' + count;
+          return (
+            <g key={count} transform="translate(60 45)" fill="var(--sage)">
+              <defs><path id={petalId} d={path} /></defs>
+              {Array.from({ length: count }, (_, index) => (
+                <use
+                  key={index}
+                  href={'#' + petalId}
+                  transform={'rotate(' + (index + offset) * 360 / count + ')'}
+                />
+              ))}
+            </g>
+          );
+        })}
+      </g>
+    </svg>
+  );
 }
+
 function App() {
   const isWeddingParty = /^\/wedding-party\/?$/.test(window.location.pathname);
   const navMarkerRef = useRef<HTMLDivElement>(null);
