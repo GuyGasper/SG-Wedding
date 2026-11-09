@@ -114,6 +114,18 @@ main {
   transform: translateY(-8px);
 }
 
+/* Place the marker just above the nav without changing its layout. */
+.nav-scroll-marker {
+  position: relative;
+  top: -1px;
+  height: 1px;
+  margin-bottom: -1px;
+}
+
+.masthead + .nav-scroll-marker {
+  margin-top: 35px;
+}
+
 .site-nav {
   position: sticky;
   top: 0;
@@ -125,8 +137,8 @@ main {
   background: var(--sage);
 }
 
-.home-navigation {
-  margin-top: 35px;
+.site-nav[data-stuck] {
+  box-shadow: 0 1px 4px rgb(0 0 0 / 25%);
 }
 
 .site-nav a {

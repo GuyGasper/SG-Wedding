@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import { WeddingParty } from './WeddingParty';
 import './styles.css';
@@ -7,6 +7,19 @@ function Flower() {
 }
 function App() {
   const isWeddingParty = /^\/wedding-party\/?$/.test(window.location.pathname);
+  const navMarkerRef = useRef<HTMLDivElement>(null);
+  const [navStuck, setNavStuck] = useState(false);
+
+  useEffect(() => {
+    const marker = navMarkerRef.current;
+    if (!marker) return;
+
+    const observer = new IntersectionObserver(([entry]) => {
+      setNavStuck(!entry.isIntersecting && entry.boundingClientRect.bottom <= 0);
+    });
+    observer.observe(marker);
+    return () => observer.disconnect();
+  }, []);
 
   return (
     <>
@@ -28,7 +41,8 @@ function App() {
           </h1>
         </header>
       )}
-      <nav className={isWeddingParty ? 'site-nav' : 'site-nav home-navigation'} aria-label="Main navigation">
+      <div ref={navMarkerRef} className="nav-scroll-marker" aria-hidden="true" />
+      <nav className="site-nav" data-stuck={navStuck || undefined} aria-label="Main navigation">
         <a href="/" aria-current={isWeddingParty ? undefined : 'page'}>Home</a>
         <a href="/wedding-party" aria-current={isWeddingParty ? 'page' : undefined}>Wedding Party</a>
       </nav>
