@@ -37,7 +37,7 @@ function App() {
       ) : (
         <main id="home">
           <figure className="hero">
-            <img src="/images/sarah-and-guy.jpg" width="4032" height="3024" alt="Sarah and Guy celebrating their engagement beside Lake Michigan, with the Chicago skyline behind them" fetchPriority="high" />
+            <img src="/images/engagement-on-the-steps.jpg" width="2400" height="1600" alt="Sarah and Guy reading together on the front steps in a black-and-white photograph" fetchPriority="high" />
           </figure>
           <section className="invitation" aria-label="Wedding date">
             <p>please join us for our wedding<br className="desktop-break" /> celebration on</p>
