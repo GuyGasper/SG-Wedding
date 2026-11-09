@@ -3,7 +3,7 @@ test('homepage content, navigation, and layout', async ({ page }) => {
   await page.goto('/');
   await expect(page).toHaveTitle(/Sarah Eisenman & Guy Gasper/);
   await expect(page.getByRole('heading', {level:1})).toHaveAccessibleName('Sarah Eisenman & Guy Gasper');
-  await expect(page.getByRole('navigation').getByRole('link')).toHaveCount(1);
+  await expect(page.getByRole('navigation').getByRole('link')).toHaveText(['Home', 'Details', 'Travel and Accommodation', 'Wedding Party', 'FAQ']);
   await expect(page.getByRole('link', {name:'Home',exact:true})).toHaveAttribute('aria-current','page');
   await expect(page.locator('time')).toHaveText('October 2, 2027');
   await expect(page.locator('.hero img')).toBeVisible();

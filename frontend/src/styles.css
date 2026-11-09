@@ -1,4 +1,396 @@
-@font-face{font-family:WeddingSerif;src:url('/fonts/serif.ttf') format('truetype');font-style:normal;font-weight:400;font-display:swap}
-@font-face{font-family:WeddingScript;src:url('/fonts/script.ttf') format('truetype');font-style:normal;font-weight:400;font-display:swap}
-:root{font-family:Georgia,serif;color:#f9f7ed;background:#9fa98a;font-synthesis:none;text-rendering:optimizeLegibility;-webkit-font-smoothing:antialiased}
-*{box-sizing:border-box}body{margin:0}a{color:inherit}h1,p,figure{margin:0}.masthead{text-align:center;padding:65px 24px 0}h1{font-weight:400;display:flex;flex-direction:column;align-items:center}.name{font-family:WeddingSerif,'Times New Roman',serif;text-transform:uppercase;font-size:clamp(51px,7.1vw,112px);line-height:1.04;letter-spacing:-.025em}.and{font-family:WeddingScript,cursive;font-size:clamp(35px,3.8vw,53px);line-height:1.25;margin:0 0 5px}nav{display:flex;justify-content:center;padding:53px 0 34px}nav a{font-family:Arial,sans-serif;font-size:12px;text-transform:uppercase;text-decoration:none;letter-spacing:.23em;padding:10px 8px;border-bottom:1px solid #f9f7ed80}nav a:hover{border-color:currentColor}a:focus-visible{outline:2px solid currentColor;outline-offset:6px}.hero{max-width:1220px;margin:0 auto;padding:0 26px}.hero img{display:block;width:100%;height:auto;aspect-ratio:4 / 3;object-fit:cover;object-position:center}.invitation{text-align:center;padding:36px 20px 65px}.invitation p{font-family:WeddingScript,cursive;font-size:clamp(31px,3.6vw,49px);line-height:1.1;letter-spacing:.005em}.invitation time{display:block;font-family:WeddingSerif,serif;font-size:clamp(37px,4vw,55px);text-transform:uppercase;line-height:1.3;margin-top:26px}.flower{display:block;width:85px;height:96px;margin:50px auto 0}.skip-link{position:absolute;top:10px;left:10px;background:#34452e;padding:12px;transform:translateY(-150%);z-index:2}.skip-link:focus{transform:translateY(0)}@media(min-width:1400px){.masthead{padding-top:75px}}@media(max-width:600px){.masthead{padding:44px 12px 0}.name{font-size:clamp(39px,10.2vw,61px)}.and{font-size:33px;margin:4px 0 6px}nav{padding:35px 0 27px}.hero{padding:0 16px}.hero img{aspect-ratio:4 / 3}.invitation{padding-top:32px}.invitation p{font-size:33px}.invitation time{font-size:38px;margin-top:24px}.flower{margin-top:39px;width:76px}.desktop-break{display:none}}
+@font-face {
+  font-family: WeddingSerif;
+  src: url('/fonts/cormorant-garamond-medium.woff2') format('woff2');
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: WeddingScript;
+  src: url('/fonts/script.ttf') format('truetype');
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: WeddingSans;
+  src: url('/fonts/jost.woff2') format('woff2');
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+
+:root {
+  --sage: #9eaa89;
+  --white: #fff;
+  --muted-white: #d5dacd;
+  --serif: WeddingSerif, 'Times New Roman', serif;
+  --script: WeddingScript, cursive;
+  --sans: WeddingSans, Arial, sans-serif;
+  --divider: 4px solid var(--white);
+  --name-size: 90px;
+  --name-line: 76.8px;
+  --name-width: 0.68;
+  color: var(--white);
+  background: var(--sage);
+  font-family: var(--sans);
+  font-synthesis: none;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body,
+h1,
+h2,
+p,
+figure {
+  margin: 0;
+}
+
+a {
+  color: inherit;
+}
+
+a:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 5px;
+}
+
+.skip-link {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  z-index: 2;
+  padding: 12px;
+  background: #34452e;
+  transform: translateY(-150%);
+}
+
+.skip-link:focus {
+  transform: translateY(0);
+}
+
+main {
+  scroll-margin-top: 58.2px;
+}
+
+.masthead {
+  padding: 80px 15px 30px;
+  overflow: clip;
+  text-align: center;
+}
+
+.masthead h1 {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  font-weight: 400;
+}
+
+.name,
+.invitation time {
+  font-family: var(--serif);
+  font-weight: 500;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  transform: scaleX(var(--name-width));
+}
+
+.masthead .name {
+  font-size: var(--name-size);
+  line-height: var(--name-line);
+  transform: translateY(-12px) scaleX(var(--name-width));
+  white-space: nowrap;
+}
+
+.and {
+  font: 38px/35.2px var(--script);
+  transform: translateY(-8px);
+}
+
+/* Place the marker just above the nav without changing its layout. */
+.nav-scroll-marker {
+  position: relative;
+  top: -1px;
+  height: 1px;
+  margin-bottom: -1px;
+}
+
+.masthead + .nav-scroll-marker {
+  margin-top: 35px;
+}
+
+.site-nav {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0 30px;
+  background: var(--sage);
+}
+
+.site-nav[data-stuck] {
+  box-shadow: 0 1px 4px rgb(0 0 0 / 25%);
+}
+
+.site-nav a {
+  padding: 20px 0;
+  font: 400 15px/18.2px var(--sans);
+  letter-spacing: 3px;
+  text-decoration: none;
+  text-transform: uppercase;
+}
+
+.site-nav a[aria-current='page'] {
+  text-decoration: underline var(--white) 2px;
+  text-underline-offset: 7px;
+  text-decoration-skip-ink: none;
+}
+
+.site-nav a:not([aria-current='page']):hover {
+  color: var(--muted-white);
+}
+
+#home {
+  padding-top: 30px;
+}
+
+.hero {
+  max-width: 1170px;
+  margin-inline: auto;
+  padding-inline: 15px;
+}
+
+.hero img {
+  display: block;
+  width: 87%;
+  height: auto;
+  margin-inline: auto;
+}
+
+.invitation {
+  padding: 30px 15px 32px;
+  overflow: clip;
+  text-align: center;
+}
+
+.invitation p {
+  font: 33.6px/1.4 var(--script);
+  letter-spacing: 2.5px;
+}
+
+.invitation .invitation-location {
+  margin-top: 8px;
+}
+
+.invitation time {
+  display: block;
+  margin-top: 20px;
+  font-size: 51px;
+  line-height: 65.52px;
+}
+
+.flower {
+  display: block;
+  width: auto;
+  height: 75px;
+}
+
+.invitation .flower {
+  height: 68px;
+  margin: 32px auto 0;
+}
+
+.party-masthead {
+  padding: 10px 15px;
+  overflow: clip;
+  text-align: center;
+}
+
+.party-wordmark {
+  display: grid;
+  width: max-content;
+  max-width: 100%;
+  margin-inline: auto;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  align-items: center;
+  gap: 30px;
+  font-size: clamp(38px, 4.6vw, 56px);
+  line-height: 62.4px;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.party-wordmark .and {
+  transform: translateY(-3px);
+}
+
+.party-wordmark .name:first-child {
+  justify-self: end;
+  transform: translateY(-6px) scaleX(var(--name-width));
+  transform-origin: right center;
+}
+
+.party-wordmark .name:last-child {
+  justify-self: start;
+  transform: translateY(-6px) scaleX(var(--name-width));
+  transform-origin: left center;
+}
+
+.empty-page {
+  min-height: clamp(240px, 50vh, 520px);
+}
+
+.party-page {
+  padding: 40px 12px 100px;
+}
+
+.party-list {
+  display: grid;
+  gap: 40px;
+  max-width: 935px;
+  margin: 0 auto;
+  padding: 0;
+  list-style: none;
+}
+
+.party-member {
+  display: grid;
+  grid-template-columns: 17.15% 24% 8.85% 40% 10%;
+  align-items: start;
+}
+
+.party-portrait {
+  grid-column: 2;
+  aspect-ratio: 1;
+  background: var(--white);
+}
+
+.party-member-details {
+  grid-column: 4;
+  padding-top: 8px;
+  overflow-wrap: anywhere;
+}
+
+.party-member h2 {
+  font-family: var(--serif);
+  font-size: 28.8px;
+  font-weight: 500;
+  text-transform: uppercase;
+  line-height: 1.2;
+  letter-spacing: 2.5px;
+}
+
+.party-role {
+  font: 28px/1.2 var(--script);
+  text-transform: lowercase;
+}
+
+.party-description {
+  margin-top: 20px;
+  font: 400 18.2px/1.6 var(--sans);
+  letter-spacing: 2px;
+}
+
+.site-footer {
+  padding: 100px 20px 30px;
+  border-top: var(--divider);
+  text-align: center;
+}
+
+.site-footer p {
+  font: 400 12px/1.75 var(--sans);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  text-wrap: balance;
+}
+
+.footer-minted {
+  display: inline-block;
+  vertical-align: -0.12em;
+}
+
+.footer-minted img {
+  display: block;
+}
+
+@media (max-width: 767px) {
+  :root {
+    --name-size: 45px;
+    --name-line: 38.4px;
+  }
+
+  .masthead {
+    padding-top: 55px;
+  }
+
+  .masthead .name {
+    transform: translateY(-5px) scaleX(var(--name-width));
+  }
+
+  .and {
+    transform: translateY(-4px);
+    font-size: 30.4px;
+    line-height: 30.4px;
+  }
+
+  .invitation time {
+    font-size: 34px;
+    line-height: 43.68px;
+  }
+
+  main {
+    scroll-margin-top: 132px;
+  }
+
+  .site-nav {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    max-width: 100%;
+    gap: 0 12px;
+    padding-inline: 12px;
+  }
+
+  .site-nav a {
+    min-height: 44px;
+    align-content: center;
+    padding-block: 10px;
+    text-align: center;
+    font-size: 13px;
+    letter-spacing: 2px;
+  }
+
+  .site-nav-wide {
+    grid-column: 1 / -1;
+  }
+
+  .party-wordmark {
+    grid-template-columns: minmax(0, 1fr);
+    justify-items: center;
+    gap: 8px;
+    font-size: var(--name-size);
+    line-height: 49.92px;
+  }
+
+  .party-wordmark .name:first-child,
+  .party-wordmark .name:last-child {
+    justify-self: center;
+    transform: translateY(-3px) scaleX(var(--name-width));
+    transform-origin: center;
+  }
+
+  .party-member {
+    grid-template-columns: 15.7% 24% 10.3% 40% 10%;
+  }
+
+  .party-member h2 {
+    font-size: clamp(20px, 6.3vw, 28.8px);
+  }
+}

@@ -1,0 +1,29 @@
+const weddingParty = [
+  { 
+    role: 'Bridesmaid', 
+    names: ['Katie', 'Annie', 'Megan', 'Sarah', 'Hannah'] 
+  },
+  { 
+    role: 'Groomsman', 
+    names: ['Jack', 'Will', 'Alex'] 
+  },
+];
+
+export function WeddingParty() {
+  return (
+    <main id="content" className="party-page" aria-label="Wedding Party">
+      <ul className="party-list" role="list">
+        {weddingParty.flatMap(({ role, names }) => names.map((name) => (
+          <li className="party-member" key={name}>
+            <div className="party-portrait" aria-hidden="true" />
+            <div className="party-member-details">
+              <h2>{name}</h2>
+              <p className="party-role">{role}</p>
+              <p className="party-description">TODO: Fill in details</p>
+            </div>
+          </li>
+        )))}
+      </ul>
+    </main>
+  );
+}
