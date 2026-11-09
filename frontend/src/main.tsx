@@ -59,9 +59,9 @@ function App() {
       {isWeddingParty ? (
         <header className="party-masthead">
           <a className="party-wordmark" href="/" aria-label="Sarah Eisenman & Guy Gasper — Home">
-            <span>Sarah Eisenman</span>
-            <Flower />
-            <span>Guy Gasper</span>
+            <span className="name">Sarah Eisenman</span>
+            <span className="and" aria-hidden="true">and</span>
+            <span className="name">Guy Gasper</span>
           </a>
         </header>
       ) : (
@@ -85,9 +85,10 @@ function App() {
           <figure className="hero">
             <img src="/images/engagement-on-the-steps.jpg" width="2400" height="1600" alt="Sarah and Guy reading together on the front steps in a black-and-white photograph" fetchPriority="high" />
           </figure>
-          <section className="invitation" aria-label="Wedding date">
+          <section className="invitation" aria-label="Wedding details">
             <p>please join us for our wedding celebration on</p>
             <time dateTime="2027-10-02">October 2, 2027</time>
+            <p className="invitation-location">in Burlington, WI</p>
             <Flower />
           </section>
         </main>

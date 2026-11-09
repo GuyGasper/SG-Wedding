@@ -93,7 +93,6 @@ main {
 }
 
 .name,
-.party-wordmark span,
 .invitation time {
   font-family: var(--serif);
   font-weight: 500;
@@ -102,7 +101,7 @@ main {
   transform: scaleX(var(--name-width));
 }
 
-.name {
+.masthead .name {
   font-size: var(--name-size);
   line-height: var(--name-line);
   transform: translateY(-12px) scaleX(var(--name-width));
@@ -187,6 +186,10 @@ main {
   letter-spacing: 2.5px;
 }
 
+.invitation .invitation-location {
+  margin-top: 8px;
+}
+
 .invitation time {
   display: block;
   margin-top: 20px;
@@ -225,13 +228,17 @@ main {
   white-space: nowrap;
 }
 
-.party-wordmark span:first-child {
+.party-wordmark .and {
+  transform: translateY(-3px);
+}
+
+.party-wordmark .name:first-child {
   justify-self: end;
   transform: translateY(-6px) scaleX(var(--name-width));
   transform-origin: right center;
 }
 
-.party-wordmark span:last-child {
+.party-wordmark .name:last-child {
   justify-self: start;
   transform: translateY(-6px) scaleX(var(--name-width));
   transform-origin: left center;
@@ -320,7 +327,7 @@ main {
     padding-top: 55px;
   }
 
-  .name {
+  .masthead .name {
     transform: translateY(-5px) scaleX(var(--name-width));
   }
 
@@ -346,20 +353,16 @@ main {
   .party-wordmark {
     grid-template-columns: minmax(0, 1fr);
     justify-items: center;
-    gap: 0;
+    gap: 8px;
     font-size: var(--name-size);
     line-height: 49.92px;
   }
 
-  .party-wordmark span:first-child,
-  .party-wordmark span:last-child {
+  .party-wordmark .name:first-child,
+  .party-wordmark .name:last-child {
     justify-self: center;
     transform: translateY(-3px) scaleX(var(--name-width));
     transform-origin: center;
-  }
-
-  .party-wordmark .flower {
-    height: 80px;
   }
 
   .party-member {
