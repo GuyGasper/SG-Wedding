@@ -1,6 +1,12 @@
 const weddingParty = [
-  { role: 'Bridesmaid', names: ['Hannah', 'Annie', 'Megan', 'Sarah', 'Katie'] },
-  { role: 'Groomsman', names: ['Jack', 'Alex', 'Will'] },
+  { 
+    role: 'Bridesmaid', 
+    names: ['Katie', 'Annie', 'Megan', 'Sarah', 'Hannah'] 
+  },
+  { 
+    role: 'Groomsman', 
+    names: ['Jack', 'Will', 'Alex'] 
+  },
 ];
 
 export function WeddingParty() {

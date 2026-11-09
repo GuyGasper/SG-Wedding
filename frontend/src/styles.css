@@ -244,6 +244,10 @@ main {
   transform-origin: left center;
 }
 
+.empty-page {
+  min-height: clamp(240px, 50vh, 520px);
+}
+
 .party-page {
   padding: 40px 12px 100px;
 }
@@ -343,11 +347,28 @@ main {
   }
 
   main {
-    scroll-margin-top: 48.2px;
+    scroll-margin-top: 132px;
+  }
+
+  .site-nav {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    max-width: 100%;
+    gap: 0 12px;
+    padding-inline: 12px;
   }
 
   .site-nav a {
-    padding-block: 15px;
+    min-height: 44px;
+    align-content: center;
+    padding-block: 10px;
+    text-align: center;
+    font-size: 13px;
+    letter-spacing: 2px;
+  }
+
+  .site-nav-wide {
+    grid-column: 1 / -1;
   }
 
   .party-wordmark {

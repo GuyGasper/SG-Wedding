@@ -37,8 +37,19 @@ function Flower() {
   );
 }
 
+const navigation = [
+  { href: '/', label: 'Home' },
+  { href: '/details', label: 'Details' },
+  { href: '/travel-and-accommodation', label: 'Travel and Accommodation', wide: true },
+  { href: '/wedding-party', label: 'Wedding Party' },
+  { href: '/faq', label: 'FAQ' },
+];
+
 function App() {
-  const isWeddingParty = /^\/wedding-party\/?$/.test(window.location.pathname);
+  const pathname = window.location.pathname.replace(/\/+$/, '') || '/';
+  const currentPage = navigation.find(({ href }) => href === pathname) ?? navigation[0];
+  const isHome = currentPage.href === '/';
+  const isWeddingParty = currentPage.href === '/wedding-party';
   const navMarkerRef = useRef<HTMLDivElement>(null);
   const [navStuck, setNavStuck] = useState(false);
 
@@ -55,8 +66,8 @@ function App() {
 
   return (
     <>
-      <a className="skip-link" href={isWeddingParty ? '#content' : '#home'}>Skip to content</a>
-      {isWeddingParty ? (
+      <a className="skip-link" href={isHome ? '#home' : '#content'}>Skip to content</a>
+      {!isHome ? (
         <header className="party-masthead">
           <a className="party-wordmark" href="/" aria-label="Sarah Eisenman & Guy Gasper — Home">
             <span className="name">Sarah Eisenman</span>
@@ -75,12 +86,22 @@ function App() {
       )}
       <div ref={navMarkerRef} className="nav-scroll-marker" aria-hidden="true" />
       <nav className="site-nav" data-stuck={navStuck || undefined} aria-label="Main navigation">
-        <a href="/" aria-current={isWeddingParty ? undefined : 'page'}>Home</a>
-        <a href="/wedding-party" aria-current={isWeddingParty ? 'page' : undefined}>Wedding Party</a>
+        {navigation.map(({ href, label, wide }) => (
+          <a
+            key={href}
+            href={href}
+            className={wide ? 'site-nav-wide' : undefined}
+            aria-current={currentPage.href === href ? 'page' : undefined}
+          >
+            {label}
+          </a>
+        ))}
       </nav>
-      {isWeddingParty ? (
-        <WeddingParty />
-      ) : (
+      {isWeddingParty && <WeddingParty />}
+      {!isHome && !isWeddingParty && (
+        <main id="content" className="empty-page" aria-label={currentPage.label} />
+      )}
+      {isHome && (
         <main id="home">
           <figure className="hero">
             <img src="/images/engagement-on-the-steps.jpg" width="2400" height="1600" alt="Sarah and Guy reading together on the front steps in a black-and-white photograph" fetchPriority="high" />
