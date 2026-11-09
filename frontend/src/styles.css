@@ -226,38 +226,14 @@ main {
 }
 
 .party-page {
-  margin-top: 30px;
-  padding: 130px 12px 100px;
-}
-
-.party-page h1,
-.party-member h2 {
-  font-family: var(--serif);
-  font-weight: 500;
-  text-transform: uppercase;
-}
-
-.party-page h1 {
-  font-size: 44px;
-  line-height: 46.8px;
-  letter-spacing: 2.4px;
-  text-align: center;
-}
-
-.party-page h1::after {
-  display: block;
-  width: min(175px, 50%);
-  height: 3px;
-  margin: 50px auto 0;
-  background: currentColor;
-  content: '';
+  padding: 40px 12px 100px;
 }
 
 .party-list {
   display: grid;
   gap: 40px;
   max-width: 935px;
-  margin: 54px auto 0;
+  margin: 0 auto;
   padding: 0;
   list-style: none;
 }
@@ -281,7 +257,10 @@ main {
 }
 
 .party-member h2 {
+  font-family: var(--serif);
   font-size: 28.8px;
+  font-weight: 500;
+  text-transform: uppercase;
   line-height: 1.2;
   letter-spacing: 2.5px;
 }
@@ -369,11 +348,6 @@ main {
 
   .party-wordmark .flower {
     height: 80px;
-  }
-
-  .party-page h1 {
-    font-size: clamp(27px, 7.6vw, 29.5px);
-    line-height: 31.2px;
   }
 
   .party-member {

@@ -5,8 +5,7 @@ const weddingParty = [
 
 export function WeddingParty() {
   return (
-    <main id="content" className="party-page">
-      <h1>Wedding Party</h1>
+    <main id="content" className="party-page" aria-label="Wedding Party">
       <ul className="party-list" role="list">
         {weddingParty.flatMap(({ role, names }) => names.map((name) => (
           <li className="party-member" key={name}>
