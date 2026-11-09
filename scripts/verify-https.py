@@ -57,7 +57,7 @@ def main():
             scripts = re.findall(rb'src="(/assets/[^" ]+\.js)"', html)
             styles = re.findall(rb'href="(/assets/[^" ]+\.css)"', html)
             assert scripts and styles
-            paths = [p.decode() for p in styles + scripts] + ['/images/engagement-on-the-steps.jpg', '/fonts/serif.woff2', '/fonts/script.ttf', '/fonts/jost.woff2']
+            paths = [p.decode() for p in styles + scripts] + ['/images/engagement-on-the-steps.jpg', '/fonts/cormorant-garamond-medium.woff2', '/fonts/script.ttf', '/fonts/jost.woff2']
             for path in paths:
                 asset, headers, _, _ = fetch(connection, path)
                 assert asset and 'text/html' not in headers.get('Content-Type', '')
