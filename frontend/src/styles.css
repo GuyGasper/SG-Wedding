@@ -1,165 +1,308 @@
-@font-face{font-family:WeddingSerif;src:url('/fonts/serif.ttf') format('truetype');font-style:normal;font-weight:400;font-display:swap}
-@font-face{font-family:WeddingScript;src:url('/fonts/script.ttf') format('truetype');font-style:normal;font-weight:400;font-display:swap}
-:root{font-family:Georgia,serif;color:#f9f7ed;--wedding-background:#9fa98a;background:var(--wedding-background);font-synthesis:none;text-rendering:optimizeLegibility;-webkit-font-smoothing:antialiased}
-*{box-sizing:border-box}body{margin:0}
-a{color:inherit}h1,p,figure{margin:0}.masthead{text-align:center;padding:65px 24px 0}h1{font-weight:400;display:flex;flex-direction:column;align-items:center}.name{font-family:WeddingSerif,'Times New Roman',serif;text-transform:uppercase;font-size:clamp(51px,7.1vw,112px);line-height:1.04;letter-spacing:-.025em}.and{font-family:WeddingScript,cursive;font-size:clamp(35px,3.8vw,53px);line-height:1.25;margin:0 0 5px}nav{display:flex;justify-content:center;gap:24px;padding:53px 0 34px}nav a{font-family:Arial,sans-serif;font-size:12px;text-transform:uppercase;text-decoration:none;letter-spacing:.23em;padding:10px 8px;border-bottom:1px solid transparent}nav a[aria-current="page"]{border-color:#f9f7ed80}nav a:hover{border-color:currentColor}a:focus-visible{outline:2px solid currentColor;outline-offset:6px}.hero{max-width:1220px;margin:0 auto;padding:0 26px}.hero img{display:block;width:80%;height:auto;margin-inline:auto}.invitation{text-align:center;padding:36px 20px 65px}.invitation p{font-family:WeddingScript,cursive;font-size:clamp(31px,3.6vw,49px);line-height:1.1;letter-spacing:.005em}.invitation time{display:block;font-family:WeddingSerif,serif;font-size:clamp(37px,4vw,55px);text-transform:uppercase;line-height:1.3;margin-top:26px}.flower{display:block;width:85px;height:96px;margin:50px auto 0}.skip-link{position:absolute;top:10px;left:10px;background:#34452e;padding:12px;transform:translateY(-150%);z-index:2}.skip-link:focus{transform:translateY(0)}@media(min-width:1400px){.masthead{padding-top:75px}}@media(max-width:600px){.masthead{padding:44px 12px 0}.name{font-size:clamp(39px,10.2vw,61px)}.and{font-size:33px;margin:4px 0 6px}nav{padding:35px 0 27px}.hero{padding:0 16px}.invitation{padding-top:32px}.invitation p{font-size:33px}.invitation time{font-size:38px;margin-top:24px}.flower{margin-top:39px;width:76px}.desktop-break{display:none}}
+@font-face {
+  font-family: WeddingSerif;
+  src: url('/fonts/serif.woff2') format('woff2');
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
 
-.party-masthead {
-  padding: 8px 20px 18px;
+@font-face {
+  font-family: WeddingScript;
+  src: url('/fonts/script.ttf') format('truetype');
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: WeddingSans;
+  src: url('/fonts/jost.woff2') format('woff2');
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+
+:root {
+  --sage: #9eaa89;
+  --white: #fff;
+  --muted-white: #d5dacd;
+  --serif: WeddingSerif, 'Times New Roman', serif;
+  --script: WeddingScript, cursive;
+  --sans: WeddingSans, Arial, sans-serif;
+  --divider: 4px solid var(--white);
+  --name-size: 90px;
+  --name-line: 76.8px;
+  --name-width: 0.68;
+  color: var(--white);
+  background: var(--sage);
+  font-family: var(--sans);
+  font-synthesis: none;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body,
+h1,
+h2,
+p,
+figure {
+  margin: 0;
+}
+
+a {
+  color: inherit;
+}
+
+a:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 5px;
+}
+
+.skip-link {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  z-index: 2;
+  padding: 12px;
+  background: #34452e;
+  transform: translateY(-150%);
+}
+
+.skip-link:focus {
+  transform: translateY(0);
+}
+
+main {
+  scroll-margin-top: 58.2px;
+}
+
+.masthead {
+  padding: 80px 15px 30px;
+  overflow: clip;
   text-align: center;
 }
 
-.party-wordmark {
-  display: inline-flex;
+.masthead h1 {
+  display: flex;
+  flex-direction: column;
   align-items: center;
+  gap: 20px;
+  font-weight: 400;
+}
+
+.name,
+.party-wordmark span,
+.invitation time {
+  font-family: var(--serif);
+  font-weight: 400;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  font-variation-settings: "opsz" 96;
+  transform: scaleX(var(--name-width));
+}
+
+.name {
+  font-size: var(--name-size);
+  line-height: var(--name-line);
+  transform: translateY(-12px) scaleX(var(--name-width));
+  white-space: nowrap;
+}
+
+.and {
+  font: 38px/35.2px var(--script);
+  transform: translateY(-8px);
+}
+
+.site-nav {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  display: flex;
+  flex-wrap: wrap;
   justify-content: center;
-  gap: clamp(12px, 2.6vw, 34px);
-  font-family: WeddingSerif, 'Times New Roman', serif;
-  font-size: clamp(26px, 4vw, 52px);
-  line-height: 1.1;
+  gap: 0 30px;
+  background: var(--sage);
+}
+
+.home-navigation {
+  margin-top: 50px;
+}
+
+.site-nav a {
+  padding: 20px 0;
+  font: 400 15px/18.2px var(--sans);
+  letter-spacing: 3px;
   text-decoration: none;
   text-transform: uppercase;
 }
 
-.party-wordmark .flower {
-  flex: none;
-  width: clamp(36px, 5.5vw, 70px);
-  height: auto;
-  margin: 0;
+.site-nav a[aria-current='page'],
+.site-nav a:hover {
+  color: var(--muted-white);
 }
 
-.party-navigation {
-  position: sticky;
-  top: 0;
-  z-index: 1;
-  padding: 10px 0 15px;
-  background: var(--wedding-background);
+#home {
+  padding-top: 30px;
+}
+
+.hero {
+  max-width: 1170px;
+  margin-inline: auto;
+  padding-inline: 15px;
+}
+
+.hero img {
+  display: block;
+  width: 80%;
+  height: auto;
+  margin-inline: auto;
+}
+
+.invitation {
+  padding: 30px 15px 32px;
+  overflow: clip;
+  text-align: center;
+}
+
+.invitation p {
+  font: 33.6px/1.4 var(--script);
+  letter-spacing: 2.5px;
+}
+
+.invitation time {
+  display: block;
+  margin-top: 20px;
+  font-size: 51px;
+  line-height: 65.52px;
+}
+
+.flower {
+  display: block;
+  width: auto;
+  height: 75px;
+}
+
+.invitation .flower {
+  height: 68px;
+  margin: 32px auto 0;
+}
+
+.party-masthead {
+  padding: 10px 15px;
+  overflow: clip;
+  text-align: center;
+}
+
+.party-wordmark {
+  display: grid;
+  width: max-content;
+  max-width: 100%;
+  margin-inline: auto;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  align-items: center;
+  gap: 30px;
+  font-size: clamp(38px, 4.6vw, 56px);
+  line-height: 62.4px;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.party-wordmark span:first-child {
+  justify-self: end;
+  transform: translateY(-6px) scaleX(var(--name-width));
+  transform-origin: right center;
+}
+
+.party-wordmark span:last-child {
+  justify-self: start;
+  transform: translateY(-6px) scaleX(var(--name-width));
+  transform-origin: left center;
 }
 
 .party-page {
-  margin-top: 44px;
-  padding: 92px 24px 82px;
-  border-top: 4px solid currentColor;
+  margin-top: 30px;
+  padding: 126px 12px 100px;
+  border-top: var(--divider);
 }
 
 .party-page h1,
 .party-member h2 {
-  font-family: WeddingSerif, 'Times New Roman', serif;
+  font-family: var(--serif);
   font-weight: 400;
   text-transform: uppercase;
 }
 
 .party-page h1 {
-  font-size: clamp(33px, 4vw, 52px);
-  line-height: 1.1;
+  font-size: 44px;
+  line-height: 46.8px;
+  letter-spacing: 2.4px;
   text-align: center;
 }
 
 .party-page h1::after {
-  content: '';
-  width: min(174px, 50%);
+  display: block;
+  width: min(175px, 50%);
   height: 3px;
-  margin-top: 50px;
+  margin: 50px auto 0;
   background: currentColor;
+  content: '';
 }
 
 .party-list {
   display: grid;
-  gap: 64px;
-  max-width: 660px;
-  margin: 55px auto 0;
+  gap: 40px;
+  max-width: 935px;
+  margin: 54px auto 0;
   padding: 0;
   list-style: none;
 }
 
 .party-member {
   display: grid;
-  grid-template-columns: minmax(0, 222px) minmax(0, 1fr);
+  grid-template-columns: 17.15% 24% 8.85% 40% 10%;
   align-items: start;
-  gap: clamp(28px, 6.5vw, 82px);
 }
 
 .party-portrait {
-  width: 100%;
+  grid-column: 2;
   aspect-ratio: 1;
-  background: #fff;
+  background: var(--white);
+}
+
+.party-member-details {
+  grid-column: 4;
+  padding-top: 8px;
+  overflow-wrap: anywhere;
 }
 
 .party-member h2 {
-  margin: 0;
-  font-size: 34px;
-  line-height: 1;
+  font-size: 28.8px;
+  line-height: 1.2;
+  letter-spacing: 2.5px;
 }
 
 .party-role {
-  font-family: WeddingScript, cursive;
-  font-size: 34px;
-  line-height: 1.1;
+  font: 28px/1.2 var(--script);
   text-transform: lowercase;
 }
 
 .party-description {
-  margin-top: 24px;
-  color: #263322;
-  font: 16px/1.7 Arial, sans-serif;
-  letter-spacing: .06em;
-}
-
-@media (max-width: 600px) {
-  .party-masthead {
-    padding: 22px 16px 10px;
-  }
-
-  .party-wordmark {
-    flex-direction: column;
-    gap: 6px;
-    font-size: clamp(24px, 7vw, 38px);
-  }
-
-  .party-navigation {
-    padding: 10px 0 12px;
-  }
-
-  .party-page {
-    margin-top: 18px;
-    padding: 48px 20px 60px;
-  }
-
-  .party-page h1::after {
-    margin-top: 26px;
-  }
-
-  .party-list {
-    gap: 50px;
-    margin-top: 34px;
-  }
-
-  .party-member {
-    grid-template-columns: minmax(0, 1fr);
-    justify-items: center;
-    gap: 18px;
-    text-align: center;
-  }
-
-  .party-portrait {
-    width: min(100%, 222px);
-  }
-
-  .party-description {
-    margin-top: 12px;
-  }
+  margin-top: 20px;
+  font: 400 18.2px/1.6 var(--sans);
+  letter-spacing: 2px;
 }
 
 .site-footer {
-  padding: clamp(56px, 8.5vw, 100px) 20px 30px;
-  border-top: 4px solid #fff;
-  color: #fff;
+  padding: 100px 20px 30px;
+  border-top: var(--divider);
   text-align: center;
 }
 
 .site-footer p {
-  font: 0.75rem/1.75 Arial, sans-serif;
-  letter-spacing: 0.12em;
+  font: 400 12px/1.75 var(--sans);
+  letter-spacing: 2px;
   text-transform: uppercase;
   text-wrap: balance;
 }
@@ -171,4 +314,70 @@ a{color:inherit}h1,p,figure{margin:0}.masthead{text-align:center;padding:65px 24
 
 .footer-minted img {
   display: block;
+}
+
+@media (max-width: 767px) {
+  :root {
+    --name-size: 45px;
+    --name-line: 38.4px;
+  }
+
+  .masthead {
+    padding-top: 55px;
+  }
+
+  .name {
+    transform: translateY(-5px) scaleX(var(--name-width));
+  }
+
+  .and {
+    transform: translateY(-4px);
+    font-size: 30.4px;
+    line-height: 30.4px;
+  }
+
+  .invitation time {
+    font-size: 34px;
+    line-height: 43.68px;
+  }
+
+  main {
+    scroll-margin-top: 48.2px;
+  }
+
+  .site-nav a {
+    padding-block: 15px;
+  }
+
+  .party-wordmark {
+    grid-template-columns: minmax(0, 1fr);
+    justify-items: center;
+    gap: 0;
+    font-size: var(--name-size);
+    line-height: 49.92px;
+  }
+
+  .party-wordmark span:first-child,
+  .party-wordmark span:last-child {
+    justify-self: center;
+    transform: translateY(-3px) scaleX(var(--name-width));
+    transform-origin: center;
+  }
+
+  .party-wordmark .flower {
+    height: 80px;
+  }
+
+  .party-page h1 {
+    font-size: clamp(27px, 7.6vw, 29.5px);
+    line-height: 31.2px;
+  }
+
+  .party-member {
+    grid-template-columns: 15.7% 24% 10.3% 40% 10%;
+  }
+
+  .party-member h2 {
+    font-size: clamp(20px, 6.3vw, 28.8px);
+  }
 }

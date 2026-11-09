@@ -28,7 +28,7 @@ function App() {
           </h1>
         </header>
       )}
-      <nav className={isWeddingParty ? 'party-navigation' : undefined} aria-label="Main navigation">
+      <nav className={isWeddingParty ? 'site-nav' : 'site-nav home-navigation'} aria-label="Main navigation">
         <a href="/" aria-current={isWeddingParty ? undefined : 'page'}>Home</a>
         <a href="/wedding-party" aria-current={isWeddingParty ? 'page' : undefined}>Wedding Party</a>
       </nav>
@@ -40,7 +40,7 @@ function App() {
             <img src="/images/engagement-on-the-steps.jpg" width="2400" height="1600" alt="Sarah and Guy reading together on the front steps in a black-and-white photograph" fetchPriority="high" />
           </figure>
           <section className="invitation" aria-label="Wedding date">
-            <p>please join us for our wedding<br className="desktop-break" /> celebration on</p>
+            <p>please join us for our wedding celebration on</p>
             <time dateTime="2027-10-02">October 2, 2027</time>
             <Flower />
           </section>
