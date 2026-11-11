@@ -268,9 +268,19 @@ main {
 }
 
 .party-portrait {
+  position: relative;
   grid-column: 2;
   aspect-ratio: 1;
+  overflow: hidden;
   background: var(--white);
+}
+
+.party-portrait img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .party-member-details {
