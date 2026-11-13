@@ -52,6 +52,33 @@ function App() {
   const isWeddingParty = currentPage.href === '/wedding-party';
   const navMarkerRef = useRef<HTMLDivElement>(null);
   const [navStuck, setNavStuck] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const navRef = useRef<HTMLElement>(null);
+  const menuButtonRef = useRef<HTMLButtonElement>(null);
+  const menuId = useId();
+
+  useEffect(() => {
+    if (!menuOpen) return;
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        setMenuOpen(false);
+        menuButtonRef.current?.focus();
+      }
+    };
+    const onPointerDown = (event: PointerEvent) => {
+      if (!navRef.current?.contains(event.target as Node)) setMenuOpen(false);
+    };
+    const desktop = window.matchMedia('(min-width: 768px)');
+    const onResize = () => { if (desktop.matches) setMenuOpen(false); };
+    document.addEventListener('keydown', onKeyDown);
+    document.addEventListener('pointerdown', onPointerDown);
+    desktop.addEventListener('change', onResize);
+    return () => {
+      document.removeEventListener('keydown', onKeyDown);
+      document.removeEventListener('pointerdown', onPointerDown);
+      desktop.removeEventListener('change', onResize);
+    };
+  }, [menuOpen]);
 
   useEffect(() => {
     const marker = navMarkerRef.current;
@@ -85,17 +112,32 @@ function App() {
         </header>
       )}
       <div ref={navMarkerRef} className="nav-scroll-marker" aria-hidden="true" />
-      <nav className="site-nav" data-stuck={navStuck || undefined} aria-label="Main navigation">
+      <nav ref={navRef} className="site-nav" data-stuck={navStuck || undefined} data-open={menuOpen || undefined} aria-label="Main navigation">
+        <button
+          ref={menuButtonRef}
+          className="menu-toggle"
+          type="button"
+          aria-label={menuOpen ? 'Close navigation menu' : 'Open navigation menu'}
+          aria-expanded={menuOpen}
+          aria-controls={menuId}
+          onClick={() => setMenuOpen(!menuOpen)}
+        >
+          <span className="menu-icon" aria-hidden="true"><span /><span /><span /></span>
+        </button>
+        <span className="mobile-current-page" aria-current="page">{currentPage.label}</span>
+        <div className="nav-links" id={menuId}>
         {navigation.map(({ href, label, wide }) => (
           <a
             key={href}
             href={href}
+            onClick={() => setMenuOpen(false)}
             className={wide ? 'site-nav-wide' : undefined}
             aria-current={currentPage.href === href ? 'page' : undefined}
           >
             {label}
           </a>
         ))}
+        </div>
       </nav>
       {isWeddingParty && <WeddingParty />}
       {!isHome && !isWeddingParty && (

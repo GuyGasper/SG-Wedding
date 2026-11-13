@@ -11,7 +11,10 @@ const weddingParty: WeddingPartyMember[] = [
   { 
     role: 'Maid of Honor', 
     name: 'Katie Eisenman',
-    desc: 'Sarah’s favorite (and only) sister and best friend since day one!'
+    desc: 'Sarah’s favorite (and only) sister and best friend since day one!',
+    imageUrl: '/images/katie-eisenman.jpg',
+    imagePosition: '37% 36%',
+    imageZoom: 2.13
   },
   {
     role: 'Best Man',
@@ -23,7 +26,10 @@ const weddingParty: WeddingPartyMember[] = [
   },
   {
     name: 'Annie Gasper',
-    desc: 'Guy’s eldest younger sister and the creative mind in the Gasper family!'
+    desc: 'Guy’s eldest younger sister and the creative mind in the Gasper family!',
+    imageUrl: '/images/annie-gasper.jpg',
+    imagePosition: '31% 40%',
+    imageZoom: 1.84
   },
   {
     name: 'Megan Gasper',
@@ -48,7 +54,10 @@ const weddingParty: WeddingPartyMember[] = [
   },
   {
     name: 'Will Lowry',
-    desc: 'Guy’s bestie since college after bonding over Gossip Girl as roommates!'
+    desc: 'Guy’s bestie since college after bonding over Gossip Girl as roommates!',
+    imageUrl: '/images/will-lowry.png',
+    imagePosition: '100% 24%',
+    imageZoom: 1.35
   },
   {
     name: 'Alex Hearn',
@@ -60,7 +69,10 @@ const weddingParty: WeddingPartyMember[] = [
   {
     role: 'Officiant',
     name: 'Abby Smith',
-    desc: 'Sarah’s unofficial big sister from Northwestern University!'
+    desc: 'Sarah’s unofficial big sister from Northwestern University!',
+    imageUrl: '/images/abby-smith.png',
+    imagePosition: '0% 27%',
+    imageZoom: 1.45
   },
   {
     role: 'Parents of the Bride',
@@ -72,6 +84,9 @@ const weddingParty: WeddingPartyMember[] = [
   {
     role: 'Parents of the Groom',
     name: 'Whitney & Ed Gasper',
+    imageUrl: '/images/whitney-ed.jpg',
+    imagePosition: '41% 48%',
+    imageZoom: 3
   }
 ];
 
