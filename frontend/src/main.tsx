@@ -1,6 +1,9 @@
 import React, { useEffect, useId, useRef, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import { WeddingParty } from './WeddingParty';
+import { Travel } from './Travel';
+import { Details } from './Details';
+import { Faq } from './Faq';
 import './styles.css';
 const pomponPetalRings = [
   { count: 10, offset: 0, path: 'M0 -13C-8 -19 -11 -29 -6 -34C-3 -38 3 -38 6 -34C11 -29 8 -19 0 -13Z' },
@@ -50,6 +53,9 @@ function App() {
   const currentPage = navigation.find(({ href }) => href === pathname) ?? navigation[0];
   const isHome = currentPage.href === '/';
   const isWeddingParty = currentPage.href === '/wedding-party';
+  const isTravel = currentPage.href === '/travel-and-accommodation';
+  const isDetails = currentPage.href === '/details';
+  const isFaq = currentPage.href === '/faq';
   const navMarkerRef = useRef<HTMLDivElement>(null);
   const [navStuck, setNavStuck] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
@@ -124,7 +130,9 @@ function App() {
         >
           <span className="menu-icon" aria-hidden="true"><span /><span /><span /></span>
         </button>
-        <span className="mobile-current-page" aria-current="page">{currentPage.label}</span>
+        <span className={'mobile-current-page' + (isTravel ? ' mobile-current-page--travel' : '')} aria-current="page">
+          {isTravel ? <>Travel and <span>Accommodation</span></> : currentPage.label}
+        </span>
         <div className="nav-links" id={menuId}>
         {navigation.map(({ href, label, wide }) => (
           <a
@@ -140,7 +148,10 @@ function App() {
         </div>
       </nav>
       {isWeddingParty && <WeddingParty />}
-      {!isHome && !isWeddingParty && (
+      {isTravel && <Travel />}
+      {isDetails && <Details />}
+      {isFaq && <Faq />}
+      {!isHome && !isWeddingParty && !isTravel && !isDetails && !isFaq && (
         <main id="content" className="empty-page" aria-label={currentPage.label} />
       )}
       {isHome && (

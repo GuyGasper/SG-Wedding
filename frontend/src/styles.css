@@ -407,6 +407,16 @@ main {
     text-wrap: balance;
   }
 
+  .mobile-current-page--travel {
+    text-decoration: none;
+  }
+
+  .mobile-current-page--travel span {
+    text-decoration: underline var(--white) 2px;
+    text-underline-offset: 7px;
+    text-decoration-skip-ink: none;
+  }
+
   .menu-toggle {
     display: grid;
     grid-column: 1;
@@ -602,5 +612,530 @@ main {
     font-size: 10px;
     line-height: 1.8;
     letter-spacing: 1.2px;
+  }
+}
+
+
+.travel-page {
+  max-width: 940px;
+  margin-inline: auto;
+  padding: 38px 36px 64px;
+  text-align: center;
+}
+
+.travel-script {
+  font: 400 31px/1.25 var(--script);
+  letter-spacing: 0.3px;
+}
+
+.travel-page h1,
+.travel-page h2,
+.travel-page h3 {
+  font-family: var(--serif);
+  font-weight: 500;
+  text-transform: uppercase;
+}
+
+.travel-page h1 {
+  margin: 8px 0 12px;
+  font-size: 40px;
+  line-height: 1.2;
+  letter-spacing: 1.2px;
+}
+
+.travel-page h2 {
+  font-size: 32px;
+  line-height: 1.25;
+  letter-spacing: 2px;
+}
+
+.travel-date {
+  font-size: 12px;
+  line-height: 1.65;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+.travel-short-rule {
+  width: 72px;
+  height: 2px;
+  margin: 36px auto 30px;
+  background: currentColor;
+}
+
+.travel-page .travel-small-heading {
+  font-size: 23px;
+}
+
+.travel-venue {
+  margin-top: 16px;
+  font: 500 27px/1.3 var(--serif);
+}
+
+.travel-venue-photo {
+  display: block;
+  width: 100%;
+  max-width: 600px;
+  height: auto;
+  margin: 20px auto 16px;
+}
+
+.travel-copy {
+  font-size: 15px;
+  line-height: 1.8;
+  letter-spacing: 0.8px;
+  font-style: italic;
+}
+
+.travel-welcome {
+  max-width: 600px;
+  margin: 22px auto 0;
+}
+
+.travel-stays {
+  margin-top: 52px;
+}
+
+.travel-stays > h2 {
+  margin-top: 8px;
+}
+
+.travel-hub-selector {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 22px;
+}
+
+.travel-hub-selector button {
+  min-height: 44px;
+  padding: 12px 18px;
+  border: 1px solid var(--white);
+  border-radius: 15px;
+  background: transparent;
+  color: var(--white);
+  font: 400 12px/1.5 var(--sans);
+  letter-spacing: 1px;
+  cursor: pointer;
+}
+
+.travel-hub-selector button[aria-pressed='true'] {
+  background: var(--white);
+  color: #4b583d;
+}
+
+.travel-hub-selector button[aria-pressed='false']:hover {
+  background: rgb(255 255 255 / 12%);
+}
+
+.travel-hub {
+  padding-top: 1px;
+  scroll-margin-top: 78px;
+}
+
+.travel-hub .travel-short-rule {
+  margin-top: 32px;
+}
+
+.travel-area-copy {
+  max-width: 580px;
+  margin: 16px auto 28px;
+}
+
+.travel-drive {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin: 14px 0 28px;
+  font-size: 12px;
+  line-height: 1.65;
+  letter-spacing: 0.6px;
+}
+
+.travel-drive svg {
+  flex-shrink: 0;
+}
+
+.travel-hotels {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 36px;
+}
+
+.travel-hotels article {
+  min-width: 0;
+  padding-inline: 8px;
+}
+
+@media (min-width: 768px) {
+  .travel-hotels > article:only-child {
+    grid-column: 1 / -1;
+    justify-self: center;
+    width: calc((100% - 36px) / 2);
+  }
+}
+
+.travel-hotels h3 {
+  margin: 0;
+  font-size: 26px;
+  line-height: 1.3;
+  letter-spacing: 1px;
+}
+
+.travel-hotel-badges {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.travel-hotel-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  max-width: 100%;
+  padding: 5px 12px;
+  border: 1px solid var(--white);
+  border-radius: 999px;
+  color: var(--white);
+  font: 400 11px/1.5 var(--sans);
+  letter-spacing: 0.8px;
+  text-decoration: none;
+}
+
+.travel-room-block {
+  background: var(--white);
+  color: #4b583d;
+  text-transform: uppercase;
+}
+
+.travel-review-rating:hover {
+  background: rgb(255 255 255 / 12%);
+}
+
+.travel-hotels h3 + .travel-copy {
+  margin-top: 14px;
+}
+
+.travel-hotel-place {
+  margin: 3px 0 14px;
+  font: 400 25px/1.3 var(--script);
+}
+
+.travel-venue-address,
+.travel-hotel-address {
+  font-style: italic;
+  font-synthesis: style;
+}
+
+.travel-hotel-time {
+  margin: 15px 0 0;
+  font-size: 12px;
+  line-height: 1.65;
+  letter-spacing: 0.6px;
+}
+
+.travel-booking {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  margin-top: 18px;
+  padding: 14px 22px;
+  border: 1px solid currentColor;
+  border-radius: 0;
+  background: transparent;
+  color: inherit;
+  font: 400 11px/1.3 var(--sans);
+  text-transform: uppercase;
+  text-decoration: none;
+  letter-spacing: 1.8px;
+}
+
+.travel-booking:disabled {
+  opacity: 1;
+  cursor: default;
+}
+
+.travel-booking[href]:hover {
+  color: var(--muted-white);
+}
+
+@media (max-width: 767px) {
+  .travel-page {
+    padding: 30px 24px 40px;
+  }
+
+  .travel-page h1 {
+    font-size: 32px;
+    text-wrap: balance;
+  }
+
+  .travel-page h2 {
+    font-size: 28px;
+  }
+
+  .travel-hotels {
+    max-width: 380px;
+    margin-inline: auto;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 32px;
+  }
+
+  .travel-hub-selector {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+  }
+
+  .travel-hub-selector button {
+    padding-inline: 10px;
+  }
+
+  .travel-stays {
+    margin-top: 40px;
+  }
+}
+
+
+.details-page {
+  max-width: 940px;
+  margin-inline: auto;
+  padding: 52px 36px 72px;
+  text-align: center;
+}
+
+.wedding-event {
+  display: grid;
+  justify-items: center;
+  gap: 24px;
+}
+
+.event-heading {
+  display: grid;
+  justify-items: center;
+  gap: 10px;
+}
+
+.wedding-event h2 {
+  max-width: 680px;
+  font: 500 34px/1.2 var(--serif);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  text-wrap: balance;
+}
+
+.wedding-event .event-date {
+  font: 400 32px/1.35 var(--script);
+  letter-spacing: 0.4px;
+}
+
+.event-description,
+.event-followup,
+.event-address,
+.event-attire-note {
+  font-size: 16px;
+  line-height: 1.7;
+  letter-spacing: 1px;
+  text-wrap: balance;
+}
+
+.event-divider {
+  width: 88px;
+  height: 2px;
+  margin: 44px auto 40px;
+  background: currentColor;
+}
+
+.event-time {
+  font: 500 34px/1.15 var(--serif);
+  letter-spacing: 1.5px;
+}
+
+.event-location {
+  display: grid;
+  justify-items: center;
+  gap: 16px;
+  width: 100%;
+}
+
+.event-photo {
+  display: block;
+  width: 100%;
+  max-width: 600px;
+  height: auto;
+}
+
+.event-when {
+  display: grid;
+  gap: 10px;
+}
+
+.event-venue {
+  font: 500 28px/1.3 var(--serif);
+  letter-spacing: 0.6px;
+}
+
+.event-address {
+  font-synthesis: style;
+}
+
+.event-followup {
+  max-width: 540px;
+}
+
+.event-attire {
+  display: grid;
+  gap: 4px;
+  margin-top: 4px;
+}
+
+.event-attire-label {
+  font-size: 12px;
+  line-height: 1.7;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+.event-attire-note {
+  font-size: 14px;
+  letter-spacing: 0.6px;
+}
+
+@media (max-width: 767px) {
+  .details-page {
+    padding: 28px 24px 44px;
+  }
+
+  .wedding-event {
+    gap: 22px;
+  }
+
+  .event-heading {
+    gap: 8px;
+  }
+
+  .wedding-event h2 {
+    font-size: 28px;
+    line-height: 1.15;
+    letter-spacing: 1.3px;
+  }
+
+  .wedding-event .event-date {
+    font-size: 29px;
+  }
+
+  .event-description,
+  .event-followup,
+  .event-address {
+    font-size: 15px;
+    letter-spacing: 0.8px;
+  }
+
+  .event-venue {
+    font-size: 26px;
+  }
+
+  .event-time {
+    font-size: 32px;
+  }
+
+  .event-divider {
+    width: 72px;
+    margin: 32px auto;
+  }
+}
+
+
+.faq-page {
+  max-width: 1000px;
+  margin-inline: auto;
+  padding: 48px 36px 72px;
+  text-align: center;
+}
+
+.faq-page h1,
+.faq-item h2 {
+  font-family: var(--serif);
+  font-weight: 500;
+  text-transform: uppercase;
+  text-wrap: balance;
+}
+
+.faq-page h1 {
+  font-size: 44px;
+  line-height: 1.2;
+  letter-spacing: 2px;
+}
+
+.faq-divider {
+  width: 120px;
+  height: 2px;
+  margin: 28px auto 40px;
+  background: currentColor;
+}
+
+.faq-list {
+  display: grid;
+  gap: 36px;
+}
+
+.faq-item {
+  display: grid;
+  justify-items: center;
+  gap: 16px;
+}
+
+.faq-item h2 {
+  max-width: 860px;
+  font-size: 30px;
+  line-height: 1.25;
+  letter-spacing: 1.5px;
+}
+
+.faq-item p {
+  max-width: 780px;
+  font-size: 16px;
+  line-height: 1.8;
+  letter-spacing: 1px;
+  white-space: pre-line;
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 767px) {
+  .faq-page {
+    padding: 28px 24px 44px;
+  }
+
+  .faq-page h1 {
+    font-size: 36px;
+  }
+
+  .faq-divider {
+    width: 88px;
+    margin: 24px auto 32px;
+  }
+
+  .faq-list {
+    gap: 32px;
+  }
+
+  .faq-item {
+    gap: 12px;
+  }
+
+  .faq-item h2 {
+    font-size: 24px;
+    letter-spacing: 1.2px;
+  }
+
+  .faq-item p {
+    font-size: 15px;
+    letter-spacing: 0.8px;
   }
 }
