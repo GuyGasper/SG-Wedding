@@ -407,11 +407,11 @@ main {
     text-wrap: balance;
   }
 
-  .mobile-current-page--travel {
+  .mobile-current-page--travel[data-wrapped] {
     text-decoration: none;
   }
 
-  .mobile-current-page--travel span {
+  .mobile-current-page--travel[data-wrapped] span {
     text-decoration: underline var(--white) 2px;
     text-underline-offset: 7px;
     text-decoration-skip-ink: none;

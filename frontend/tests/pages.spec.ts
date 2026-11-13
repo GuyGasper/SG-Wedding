@@ -37,6 +37,26 @@ test('every main navigation link opens its page and closes the mobile menu', asy
   }
 });
 
+test('mobile travel title underlines the whole line when it fits and only the last line when wrapped', async ({ page }) => {
+  await page.goto('/travel-and-accommodation');
+  await page.evaluate(() => document.fonts.ready);
+  const title = page.locator('.mobile-current-page');
+  for (const width of [320, 600, 320, 600]) {
+    await page.setViewportSize({ width, height: 844 });
+    await expect(title).toBeVisible();
+    if (width === 320) {
+      await expect(title).toHaveAttribute('data-wrapped', 'true');
+      await expect(title).toHaveCSS('text-decoration-line', 'none');
+      await expect(title.locator('span')).toHaveCSS('text-decoration-line', 'underline');
+    } else {
+      await expect(title).not.toHaveAttribute('data-wrapped');
+      await expect(title).toHaveCSS('text-decoration-line', 'underline');
+      await expect(title).toHaveCSS('height', '34px');
+    }
+    await expectNoOverflow(page);
+  }
+});
+
 test('Details shows the wedding weekend, venue photo, and ceremony time', async ({ page }) => {
   await page.goto('/details');
   const main = page.getByRole('main', { name: 'Wedding weekend details' });

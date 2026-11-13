@@ -61,7 +61,21 @@ function App() {
   const [menuOpen, setMenuOpen] = useState(false);
   const navRef = useRef<HTMLElement>(null);
   const menuButtonRef = useRef<HTMLButtonElement>(null);
+  const mobilePageRef = useRef<HTMLSpanElement>(null);
+  const [travelLabelWrapped, setTravelLabelWrapped] = useState(false);
   const menuId = useId();
+
+  useEffect(() => {
+    const label = mobilePageRef.current;
+    if (!isTravel || !label) return;
+
+    const observer = new ResizeObserver(([entry]) => {
+      const lineHeight = parseFloat(getComputedStyle(label).lineHeight);
+      setTravelLabelWrapped(entry.contentRect.height > lineHeight * 1.5);
+    });
+    observer.observe(label);
+    return () => observer.disconnect();
+  }, [isTravel]);
 
   useEffect(() => {
     if (!menuOpen) return;
@@ -130,7 +144,7 @@ function App() {
         >
           <span className="menu-icon" aria-hidden="true"><span /><span /><span /></span>
         </button>
-        <span className={'mobile-current-page' + (isTravel ? ' mobile-current-page--travel' : '')} aria-current="page">
+        <span ref={mobilePageRef} className={'mobile-current-page' + (isTravel ? ' mobile-current-page--travel' : '')} data-wrapped={isTravel && travelLabelWrapped || undefined} aria-current="page">
           {isTravel ? <>Travel and <span>Accommodation</span></> : currentPage.label}
         </span>
         <div className="nav-links" id={menuId}>
