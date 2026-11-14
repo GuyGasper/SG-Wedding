@@ -4,9 +4,13 @@ export function Details() {
       <section className="wedding-event" aria-labelledby="welcome-party-title">
         <header className="event-heading">
           <p className="event-date"><time dateTime="2027-10-01">Friday, October 1, 2027</time></p>
-          <h2 id="welcome-party-title">Welcome Party</h2>
+          <h2 id="welcome-party-title">Welcome Party with Dinner</h2>
         </header>
-        <p className="event-description">Details coming soon...</p>
+        <div className="event-when">
+          <p className="event-venue">Location TBD</p>
+          <p className="event-time"><time dateTime="2027-10-01T18:00">~6:00 PM</time></p>
+        </div>
+        <p className="event-followup">More details to follow. We plan for the event to be within a few minutes drive of downtown Burlington.</p>
       </section>
       <div className="event-divider" aria-hidden="true" />
       <section className="wedding-event" aria-labelledby="ceremony-title">
@@ -29,7 +33,7 @@ export function Details() {
           <p className="event-time"><time dateTime="2027-10-02T16:30">4:30 PM</time></p>
           <address className="event-address">425 N Pine St<br />Burlington, WI 53105</address>
         </div>
-        <p className="event-followup">Cocktail hour, dinner, and dancing to follow!</p>
+        <p className="event-followup">Please arrive and be seated by 4:20 PM, so that the ceremony can begin on time. Cocktail hour, dinner, and dancing to follow!</p>
         <div className="event-attire">
           <p className="event-attire-label">Cocktail attire</p>
         </div>

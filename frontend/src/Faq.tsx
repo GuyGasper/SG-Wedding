@@ -11,14 +11,14 @@ export const faqItems: FaqItem[] = [
   },
   {
     question: 'What time does the ceremony begin?',
-    answer: 'The ceremony begins at 4:30 PM on Saturday, October 2, 2027. Cocktail hour, dinner, and dancing will follow!'
+    answer: 'The ceremony begins at 4:30 PM on Saturday, October 2, 2027. Please arrive and be seated by 4:20 PM, so that the ceremony can begin on time. Cocktail hour, dinner, and dancing will follow!'
   },
   {
     question: 'What should I wear to the wedding?',
     answer: 'Cocktail attire for the wedding - feel free to be on the fancier end or more casual. We want you to be comfortable! Please no athletic shoes, jeans, or shorts. You may wish to bring a jacket or light wrap to stay cozy depending on the weather.'
   },
   {
-    question: 'What should I wear to the welcome party?',
+    question: 'What should I wear to the welcome party with dinner?',
     answer: 'The welcome party is casual - wear whatever you’d like!'
   },
   {
