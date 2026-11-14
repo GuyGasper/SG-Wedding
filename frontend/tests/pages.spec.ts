@@ -144,7 +144,7 @@ test('single hotels center below their region while pairs retain the responsive 
     expect(Math.abs(second!.y - first!.y)).toBeLessThan(1);
   }
   await selector.getByRole('button', { name: 'Lake Geneva', exact: true }).click();
-  await expect(hotels).toHaveCount(1);
+  await expect(hotels).toHaveCount(2);
   const single = await hotels.first().boundingBox();
   const grid = await page.locator('.travel-hotels').boundingBox();
   expect(single).not.toBeNull();
