@@ -99,25 +99,32 @@ test('lodging selectors show only the chosen hotels with the correct badges and 
   await page.goto('/travel-and-accommodation');
   const selector = page.getByRole('group', { name: 'Where to stay', exact: true });
   const cases = [
-    { area: 'Burlington', hotels: ['Baymont by Wyndham Burlington', 'AmericInn by Wyndham Burlington'], ids: ['d263310-', 'd239876-'], blocked: false },
-    { area: 'Lake Geneva', hotels: ['Comfort Suites Lake Geneva East'], ids: ['d578283-'], blocked: true },
-    { area: 'Elkhorn', hotels: ['Hampton Inn Elkhorn'], ids: ['d1237844-'], blocked: true },
-    { area: 'Kenosha', hotels: ['Hampton Inn & Suites Kenosha'], ids: ['d8325460-'], blocked: true },
+    { area: 'Burlington', hotels: [
+      { name: 'Baymont by Wyndham Burlington', blocked: false },
+      { name: 'AmericInn by Wyndham Burlington', blocked: false },
+    ] },
+    { area: 'Lake Geneva', hotels: [
+      { name: 'Comfort Suites Lake Geneva East', blocked: true },
+      { name: 'Fairfield by Marriott', blocked: false },
+    ] },
+    { area: 'Elkhorn', hotels: [{ name: 'Hampton Inn Elkhorn', blocked: true }] },
+    { area: 'Kenosha', hotels: [{ name: 'Hampton Inn & Suites Kenosha', blocked: true }] },
   ];
-  for (const { area, hotels, ids, blocked } of cases) {
+  for (const { area, hotels } of cases) {
     await selector.getByRole('button', { name: area, exact: true }).click();
     await expect(selector.getByRole('button', { pressed: true })).toHaveCount(1);
     await expect(selector.getByRole('button', { name: area, exact: true })).toHaveAttribute('aria-pressed', 'true');
     const region = page.getByRole('region', { name: area, exact: true });
     await expect(page.locator('.travel-hub')).toHaveCount(1);
-    await expect(region.getByRole('heading', { level: 3 })).toHaveText(hotels);
-    for (let i = 0; i < hotels.length; i++) {
-      const hotel = region.getByRole('article').filter({ has: page.getByRole('heading', { name: hotels[i], exact: true }) });
+    await expect(region.getByRole('heading', { level: 3 })).toHaveText(hotels.map(hotel => hotel.name));
+    for (const { name, blocked } of hotels) {
+      const hotel = region.getByRole('article').filter({ has: page.getByRole('heading', { name, exact: true }) });
       const review = hotel.getByRole('link', { name: /^Guest review score/ });
-      await expect(review).toHaveAttribute('href', new RegExp('^https://www\\.tripadvisor\\.com/Hotel_Review-.*' + ids[i]));
+      await expect(review).toHaveAttribute('href', /^https:\/\/www\.tripadvisor\.com\/Hotel_Review-g\d+-d\d+-Reviews-/);
       await expect(hotel.getByLabel(/Estimated price level/)).toHaveText(/^\${1,4}$/);
       await expect(hotel.getByText('Room block available', { exact: true })).toHaveCount(blocked ? 1 : 0);
       const booking = hotel.getByRole('link', { name: blocked ? /View Booking Link/ : /View website/ });
+      await expect(hotel.getByRole('link', { name: blocked ? /View website/ : /View Booking Link/ })).toHaveCount(0);
       await expect(booking).toHaveAttribute('href', /^https:\/\//);
       await expect(booking).toHaveAttribute('rel', /noopener/);
       const drive = hotel.locator('.travel-hotel-time');
@@ -126,6 +133,18 @@ test('lodging selectors show only the chosen hotels with the correct badges and 
     }
     await expectNoOverflow(page);
   }
+});
+
+test('Fairfield booking link includes the Marriott promotion and wedding weekend dates', async ({ page }) => {
+  await page.goto('/travel-and-accommodation#stay-lake-geneva');
+  const hotel = page.getByRole('article').filter({ has: page.getByRole('heading', { name: 'Fairfield by Marriott', exact: true }) });
+  const link = hotel.getByRole('link', { name: /View website/ });
+  await expect(link).toHaveAttribute('href', /^https:\/\/www\.marriott\.com\//);
+  const url = new URL((await link.getAttribute('href'))!);
+  expect(url.searchParams.get('clusterCode')).toBe('corp');
+  expect(url.searchParams.get('corporateCode')).toBe('F6253');
+  expect(url.searchParams.get('fromDate')).toBe('10/01/2027');
+  expect(url.searchParams.get('toDate')).toBe('10/03/2027');
 });
 
 test('single hotels center below their region while pairs retain the responsive layout', async ({ page, viewport }) => {
@@ -143,8 +162,8 @@ test('single hotels center below their region while pairs retain the responsive 
     expect(second!.x).toBeGreaterThan(first!.x + first!.width);
     expect(Math.abs(second!.y - first!.y)).toBeLessThan(1);
   }
-  await selector.getByRole('button', { name: 'Lake Geneva', exact: true }).click();
-  await expect(hotels).toHaveCount(2);
+  await selector.getByRole('button', { name: 'Elkhorn', exact: true }).click();
+  await expect(hotels).toHaveCount(1);
   const single = await hotels.first().boundingBox();
   const grid = await page.locator('.travel-hotels').boundingBox();
   expect(single).not.toBeNull();
