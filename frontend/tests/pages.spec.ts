@@ -60,7 +60,7 @@ test('mobile travel title underlines the whole line when it fits and only the la
 test('Details shows the wedding weekend, venue photo, and ceremony time', async ({ page }) => {
   await page.goto('/details');
   const main = page.getByRole('main', { name: 'Wedding weekend details' });
-  await expect(main.getByRole('heading', { name: 'Welcome Party', exact: true })).toBeVisible();
+  await expect(main.getByRole('heading', { name: 'Welcome Party with Dinner', exact: true })).toBeVisible();
   await expect(main.locator('time[datetime="2027-10-01"]')).toHaveText('Friday, October 1, 2027');
   await expect(main.locator('time[datetime="2027-10-02"]')).toHaveText('Saturday, October 2, 2027');
   const time = main.locator('time[datetime="2027-10-02T16:30"]');
