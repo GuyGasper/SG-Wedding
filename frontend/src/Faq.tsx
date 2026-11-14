@@ -43,7 +43,7 @@ export const faqItems: FaqItem[] = [
   },
   {
     question: 'When should I RSVP?',
-    answer: 'RSVPs will be open once we send out invitations.'
+    answer: 'RSVPs will open once we send out invitations.'
   },
   {
     question: 'Who can I contact with questions?',
@@ -59,11 +59,11 @@ export const faqItems: FaqItem[] = [
   },
   {
     question: 'Can I bring a plus-one?',
-    answer: 'Your save the date and invitation will indicate whether you are invited with a plus-one. If you have any questions, please reach out to us at our wedding email.'
+    answer: 'Your invitation will indicate whether you are invited with a plus-one. If you have any questions, please reach out to us at our wedding email.'
   },
   {
     question: 'Will we be indoors or outdoors?',
-    answer: 'We venue is both indoors and outdoors. We hope to have the ceremony outdoors, but we will move indoors if the weather is not favorable. After the cremony, both the indor and outdoor spaces will be open all night.'
+    answer: 'The venue contains both indoor and outdoor spaces. We hope to have the ceremony outdoors, but we will move indoors if the weather is not favorable. After the ceremony, both the indoor and outdoor spaces will be open all night.'
   }
 ];
 

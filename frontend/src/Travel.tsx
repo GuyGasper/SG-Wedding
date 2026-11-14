@@ -70,6 +70,20 @@ function lakeGenevaHotels(): Hotel[] {
         source: 'Tripadvisor',
         url: 'https://www.tripadvisor.com/Hotel_Review-g60022-d578283-Reviews-Comfort_Suites_Lake_Geneva_East-Lake_Geneva_Wisconsin.html',
       }
+    },
+    {
+      name: 'Fairfield by Marriott',
+      address: '1111 N Edwards Blvd, Lake Geneva, WI 53147',
+      driveTime: '16 min',
+      priceTier: 4,
+      roomBlocked: false,
+      bookingUrl: 'https://www.marriott.com/search/findHotels.mi?searchType=InCity&destinationAddress.city=Lake+Geneva&destinationAddress.stateProvince=WI&destinationAddress.country=US&marriottBrands=FI&showMore=true&fromDate=10%2F01%2F2027&toDate=10%2F03%2F2027&flexibleDateSearch=false&clusterCode=corp&corporateCode=F6253&view=list#/0/',
+      reviewRating: {
+        score: 4.7,
+        outOf: 5,
+        source: 'Tripadvisor',
+        url: 'https://www.tripadvisor.com/Hotel_Review-g60022-d578283-Reviews-Comfort_Suites_Lake_Geneva_East-Lake_Geneva_Wisconsin.html',
+      }
     }
   ];
 }
@@ -178,7 +192,7 @@ export function Travel() {
           decoding="async"
         />
         <p className="travel-copy travel-venue-address">425 N Pine St, Burlington, WI 53105</p>
-        <p className="travel-copy travel-welcome">We can’t wait to celebrate with you! Below are four areas to consider for your stay, with hotel options and travel details to help you plan your weekend. Burlington is about equidistant (about an hour drive) from both Chicago and Milwaukee, meaning you can fly into either international airport.</p>
+        <p className="travel-copy travel-welcome">We can’t wait to celebrate with you! Below are four areas to consider for your stay, with hotel options and travel details to help you plan your weekend. Burlington is about an hour drive from both Chicago and Milwaukee, meaning you can fly into either international airport.</p>
       </section>
       <section className="travel-stays" aria-labelledby="travel-stays-title">
         <p className="travel-script">find your home for the weekend</p>
