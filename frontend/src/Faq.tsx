@@ -64,6 +64,10 @@ export const faqItems: FaqItem[] = [
   {
     question: 'Will we be indoors or outdoors?',
     answer: 'The venue contains both indoor and outdoor spaces. We hope to have the ceremony outdoors, but we will move indoors if the weather is not favorable. After the ceremony, both the indoor and outdoor spaces will be open all night.'
+  },
+  {
+    question: 'Will there be a wedding registry?',
+    answer: 'Yes, there will be a wedding registry. It will be added to this site when invitations are sent out.'
   }
 ];
 

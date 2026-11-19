@@ -1,0 +1,9 @@
+# Native builds for local development on x86-64 Windows/WSL machines.
+# Production and CI keep the ARM64 platform defined in compose.yaml.
+services:
+  api:
+    image: sg-wedding-api:local-amd64
+    platform: linux/amd64
+  frontend:
+    image: sg-wedding-frontend:local-amd64
+    platform: linux/amd64

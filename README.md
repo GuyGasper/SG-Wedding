@@ -25,8 +25,10 @@ Vite forwards relative `/api` requests to the API on port 8080. The verification
 ## Containers and checks
 
 ```sh
-docker compose -f compose.yaml -f compose.ci.yaml build
-COMPOSE_FILE=compose.yaml:compose.ci.yaml bash scripts/test-containers.sh
+# On x86-64 Windows/WSL, build native local images without ARM emulation.
+export COMPOSE_FILE=compose.yaml:compose.ci.yaml:compose.local.yaml
+docker compose build
+bash scripts/test-containers.sh
 cd frontend
 npx playwright install --with-deps chromium
 PLAYWRIGHT_BASE_URL=http://127.0.0.1:8088 npm run test:e2e
@@ -34,7 +36,7 @@ PLAYWRIGHT_BASE_URL=http://127.0.0.1:8088 npm run test:e2e
 
 Compose starts a local PostgreSQL database with a named volume and loopback-only port 5433. Its checked-in passwords are local fixtures, unrelated to production. `docker compose down` keeps local data; add `--volumes` only to reset that disposable database. The image build packages the API; `mvn verify` separately runs the database integration tests before CI builds either image.
 
-Both application images target Linux ARM64. Java runs as 10001:10001 and Nginx as 101:101, with read-only filesystems and writable `/tmp`. Local frontend: http://localhost:8088. The API is internal except for a loopback-only port in `compose.ci.yaml`.
+Production and CI images target Linux ARM64. The optional `compose.local.yaml` overlay builds native AMD64 images for x86-64 Windows/WSL; omit that overlay to verify ARM64 images. Java runs as 10001:10001 and Nginx as 101:101, with read-only filesystems and writable `/tmp`. Local frontend: http://localhost:8088. The API is internal except for a loopback-only port in `compose.ci.yaml`.
 
 ## GitHub CI/CD
 
