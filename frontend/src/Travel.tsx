@@ -43,8 +43,8 @@ function burlingtonHotels(): Hotel[] {
       address: '2709 Browns Lake Dr, Burlington, WI 53105',
       driveTime: '8 min',
       priceTier: 2,
-      roomBlocked: false,
-      bookingUrl: 'https://www.wyndhamhotels.com/americinn/burlington-wisconsin/americinn-lodge-and-suites-burlington?iata=00093763&cid=PS:iff89yahuf6x1p9&cq_cmp=23829194860&gclsrc=aw.ds&gad_source=1&gad_campaignid=23829194860',
+      roomBlocked: true,
+      bookingUrl: 'https://www.wyndhamhotels.com/americinn/burlington-wisconsin/americinn-lodge-and-suites-burlington?checkInDate=10/01/2027&checkOutDate=10/03/2027&groupCode=10012027',
       reviewRating: {
         score: 3,
         outOf: 5,
