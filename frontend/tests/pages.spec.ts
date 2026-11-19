@@ -101,7 +101,7 @@ test('lodging selectors show only the chosen hotels with the correct badges and 
   const cases = [
     { area: 'Burlington', hotels: [
       { name: 'Baymont by Wyndham Burlington', blocked: false },
-      { name: 'AmericInn by Wyndham Burlington', blocked: false },
+      { name: 'AmericInn by Wyndham Burlington', blocked: true },
     ] },
     { area: 'Lake Geneva', hotels: [
       { name: 'Comfort Suites Lake Geneva East', blocked: true },
